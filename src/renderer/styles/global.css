@@ -1,0 +1,28 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #ffffff;
+  font-family: 'Avenir', Helvetica, sans-serif;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+.inner-message a {
+  color: #00aad6;
+  text-decoration: none;
+  padding: 0 2px 0 1px;
+  border-radius: 2px;
+}
+
+.inner-message a:hover {
+  color: #ffffff;
+  background-color: #00aad6;
+}
