@@ -42,11 +42,12 @@ let rendererConfig = {
         }
       },
       {
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
+        test: /\.s?css$/,
+        loader: [].concat(ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: 'css-loader'
-        })
+            // resolve-url-loader may be chained before sass-loader if necessary
+          use: ['css-loader?sourceMap&minimize', 'sass-loader']
+        }))
       },
       {
         test: /\.html$/,
