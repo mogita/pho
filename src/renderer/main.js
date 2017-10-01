@@ -7,7 +7,7 @@ import store from './store'
 import eventBus from './bus/eventBus'
 
 import 'font-awesome/css/font-awesome'
-import './styles/global'
+import './styles/global.scss'
 import './styles/utility'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))

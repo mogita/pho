@@ -73,9 +73,9 @@ export default {
 
       this.initFetch()
       // timeline polling every 30s
-      this.poller = setInterval(_ => {
-        this.fetch()
-      }, 15 * 1000)
+      // this.poller = setInterval(_ => {
+      //   this.fetch()
+      // }, 15 * 1000)
     })
 
     window.addEventListener('keyup', (e) => {
