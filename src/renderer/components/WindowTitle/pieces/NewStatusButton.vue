@@ -5,7 +5,6 @@
 </template>
 
 <script>
-// import store from '../../../store'
 import { ipcRenderer } from 'electron'
 
 export default {
@@ -15,7 +14,7 @@ export default {
       // store.dispatch('resetAll')
       // store.dispatch('setShowCraftStatus', true)
       // this.$nextTick(_ => {
-      //   this.$eventBus.$emit('setFocus', 0)
+      //   this.$bus.$emit('setFocus', 0)
       // })
       ipcRenderer.send('show-status-composer', {
         draft: '',

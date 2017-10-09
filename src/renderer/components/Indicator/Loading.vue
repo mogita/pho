@@ -9,7 +9,7 @@
 
 <style scoped>
 .container {
-  color: #ffffff;
-  font-size: 22px;
+  color: #00ccff;
+  font-size: 18px;
 }
 </style>

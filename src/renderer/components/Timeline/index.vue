@@ -13,7 +13,6 @@
 
 <script>
 import Card from './pieces/Card'
-import api from '../../api'
 import { mapGetters } from 'vuex'
 
 let elTimeline
@@ -31,7 +30,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
+    ...mapGetters('timelineHome', [
       'showCraftStatus',
       'homeTimeline',
       'loginState'
@@ -40,7 +39,7 @@ export default {
   methods: {
     initFetch () {
       if (this.loginState) {
-        api.getHomeTimeline(false, () => {
+        this.$api.getHomeTimeline(false, () => {
           let el = this.$refs.timelineContainer
           if (el.scrollTop === 0) el.scrollTop = 1
         })
@@ -50,16 +49,16 @@ export default {
       if (this.loginState) {
         let el = this.$refs.timelineContainer
         if (el.scrollTop === 0) el.scrollTop = 1
-        api.getHomeTimeline(true)
+        this.$api.getHomeTimeline(true)
       }
     },
     onScroll (el) {
-      this.$eventBus.$emit('scrollHomeTimeline')
+      this.$bus.$emit('scrollHomeTimeline')
       // scroll to bottom to load more
       if (this.$refs.isLoadingMore.getBoundingClientRect().bottom <= el.clientHeight + 70) {
         if (this.loginState && !this.isLoadingMore) {
           this.isLoadingMore = true
-          api.getMoreHomeTimeline(() => {
+          this.$api.getMoreHomeTimeline(() => {
             this.isLoadingMore = false
           })
         }
@@ -70,8 +69,7 @@ export default {
     this.$nextTick(() => {
       elTimeline = this.$refs.timelineContainer
       elTimeline.scrollTop = 0
-
-      this.initFetch()
+      this.$pho.fetchHome()
       // timeline polling every 30s
       // this.poller = setInterval(_ => {
       //   this.fetch()
@@ -86,12 +84,12 @@ export default {
       if (e.key === 'u' && !this.showCraftStatus) {
         console.log('key and showCraftStatus: ', e.key, this.showCraftStatus)
         clearInterval(this.poller)
-        api.unauth()
+        this.$api.unauth()
       }
     })
   },
   created () {
-    this.$eventBus.$on('updateView', this.fetch)
+    this.$bus.$on('updateView', this.fetch)
   }
 }
 </script>

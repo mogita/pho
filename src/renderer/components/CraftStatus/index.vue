@@ -119,7 +119,7 @@ export default {
     }
   },
   created () {
-    this.$eventBus.$on('setFocus', this.setFocus)
+    this.$bus.$on('setFocus', this.setFocus)
     window.addEventListener('keyup', (e) => {
       if (e.key === 'Escape' || e.key === 'Esc' || e.keyCode === 27) {
         e.preventDefault()

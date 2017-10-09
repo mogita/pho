@@ -43,7 +43,7 @@
 import { remote, ipcRenderer } from 'electron'
 import { mapGetters, mapActions } from 'vuex'
 import store from '../../../store'
-import api from '../../../api'
+// import api from '../../../api'
 import moment from 'moment'
 moment.locale('zh-cn')
 
@@ -86,7 +86,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
+    ...mapGetters('timelineHome', [
       'unreadIds'
     ])
   },
@@ -171,7 +171,7 @@ export default {
       // this.setShowCraftStatus(true)
       // this.$nextTick(_ => {
       //   // set focus on status input
-      //   this.$eventBus.$emit('setFocus', 140)
+      //   this.$bus.$emit('setFocus', 140)
       // })
     },
 
@@ -186,24 +186,24 @@ export default {
       // this.setShowCraftStatus(true)
       // this.$nextTick(_ => {
       //   // set focus on status input
-      //   this.$eventBus.$emit('setFocus', 0)
+      //   this.$bus.$emit('setFocus', 0)
       // })
     },
 
     toggleFav () {
-      if (this.item.favorited === false) {
-        api.setFav(this.item.id)
-          .then(_ => {
-            this.item.favorited = true
-          })
-          .catch(err => console.error(err))
-      } else if (this.item.favorited === true) {
-        api.unsetFav(this.item.id)
-          .then(_ => {
-            this.item.favorited = false
-          })
-          .catch(err => console.error(err))
-      }
+      // if (this.item.favorited === false) {
+      //   api.setFav(this.item.id)
+      //     .then(_ => {
+      //       this.item.favorited = true
+      //     })
+      //     .catch(err => console.error(err))
+      // } else if (this.item.favorited === true) {
+      //   api.unsetFav(this.item.id)
+      //     .then(_ => {
+      //       this.item.favorited = false
+      //     })
+      //     .catch(err => console.error(err))
+      // }
       // will not call any api if fav state is arbitrary values
     },
 
@@ -221,7 +221,7 @@ export default {
       // as this card enters the viewport (below top bar of 40px) mark this card "read"
       if (this.$el.getBoundingClientRect().top - 80 >= 0) {
         this.markRead(this.id)
-        this.$eventBus.$off('scrollHomeTimeline', this.scrollHandler)
+        this.$bus.$off('scrollHomeTimeline', this.scrollHandler)
       }
     }
   },
@@ -230,14 +230,14 @@ export default {
       // add event listener if this card is still "unread"
       if (~this.unreadIds.indexOf(this.id)) {
         // turn off event listener for scroll to mark read
-        this.$eventBus.$off('scrollHomeTimeline', this.scrollHandler)
-        this.$eventBus.$on('scrollHomeTimeline', this.scrollHandler)
+        this.$bus.$off('scrollHomeTimeline', this.scrollHandler)
+        this.$bus.$on('scrollHomeTimeline', this.scrollHandler)
       }
     })
   },
   beforeDestroy () {
     // turn off event listener for scroll to mark read
-    this.$eventBus.$off('scrollHomeTimeline', this.scrollHandler)
+    this.$bus.$off('scrollHomeTimeline', this.scrollHandler)
   }
 }
 </script>

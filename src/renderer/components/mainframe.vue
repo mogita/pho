@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <Toast></Toast>
     
     <div class="wrapper">
       <div class="window-title">
@@ -19,12 +18,6 @@
       </div>
 
       <Alert></Alert>
-
-      <transition name="fade">
-        <div class="craft-status" v-show="showCraftStatus">
-          <CraftStatus></CraftStatus>
-        </div>
-      </transition>
     </div>
   </div>
 </template>
@@ -34,24 +27,19 @@ import { webFrame } from 'electron'
 import { mapGetters } from 'vuex'
 import WindowTitle from './../components/WindowTitle/index'
 import Tabbar from './../components/Tabbar/index'
-import CraftStatus from './../components/CraftStatus/index'
 import Alert from './../components/Alert/index'
-import Toast from './../components/Toast/index'
 import LoginView from './../components/Login/index'
 
 export default {
   components: {
     WindowTitle,
     Tabbar,
-    CraftStatus,
     LoginView,
-    Alert,
-    Toast
+    Alert
   },
 
   computed: {
-    ...mapGetters([
-      'showCraftStatus',
+    ...mapGetters('user', [
       'loginState'
     ])
   },
@@ -71,7 +59,7 @@ export default {
 
 .window-title {
   flex: 0 0 40px;
-  z-index: 99;
+  z-index: 999999;
 }
 
 .tab-bar {

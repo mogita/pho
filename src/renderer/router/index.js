@@ -11,7 +11,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: require('./../mainframe/App').default,
+      component: require('./../components/mainframe').default,
       children: [
         {
           path: '',

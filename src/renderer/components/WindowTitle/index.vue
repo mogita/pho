@@ -8,7 +8,7 @@
         <Loading></Loading>
       </div>
     </transition>
-    <div class="new-status-button" v-if="$route.meta.family === 'app'">
+    <div class="new-status-button" v-if="$route.meta.family === 'app' && loginState">
       <NewStatusButton></NewStatusButton>
     </div>
   </div>
@@ -28,6 +28,9 @@ export default {
   computed: {
     ...mapGetters([
       'showLoading'
+    ]),
+    ...mapGetters('user', [
+      'loginState'
     ])
   }
 }

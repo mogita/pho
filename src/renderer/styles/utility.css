@@ -6,6 +6,10 @@
   background: rgba(0, 0, 0, 0.8);
 }
 
+.navbar-spacer.with-light-overlay {
+  background: #f3f3f3;
+}
+
 .white-overlay {
   width: 100vw;
   height: 100%;

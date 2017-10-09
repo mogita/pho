@@ -41,7 +41,7 @@ export default {
   props: [],
   components: {},
   computed: {
-    ...mapGetters([
+    ...mapGetters('timelineHome', [
       'unreadIds'
     ]),
     homeTlUnreadCount () {

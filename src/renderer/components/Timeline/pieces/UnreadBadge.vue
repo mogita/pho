@@ -38,8 +38,8 @@ export default {
     this.$data.count = this.unreadIds.length
   },
   created () {
-    this.$eventBus.$on('hideUnreadBadge', () => { this.$data.hide = true })
-    this.$eventBus.$on('showUnreadBadge', () => { this.$data.hide = false })
+    this.$bus.$on('hideUnreadBadge', () => { this.$data.hide = true })
+    this.$bus.$on('showUnreadBadge', () => { this.$data.hide = false })
   }
 }
 </script>

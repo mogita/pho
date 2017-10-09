@@ -1,11 +1,11 @@
 <template>
   <div class="container">
-    <div class="navbar-spacer with-dark-overlay"></div>
+    <div class="navbar-spacer"></div>
     <div class="background"></div>
     <div class="white-overlay login-wrapper">
       <div class="branding">
-        <h1>饭否</h1>
-        <h4>请登录</h4>
+        <h1>Pho</h1>
+        <h4>Delicious Pho for Fanfou</h4>
       </div>
       <div class="login-box">
         <div class="input">
@@ -25,9 +25,6 @@
 </template>
 
 <script>
-import api from '../../api/index'
-import { toast } from '../../bus/uiBus'
-
 export default {
   props: [],
   components: {},
@@ -41,19 +38,15 @@ export default {
   },
 
   methods: {
-    doLogin () {
+    async doLogin () {
       if (this.$data.username.length > 0 && this.$data.password.length > 0) {
-        api.auth(this.$data.username, this.$data.password)
-          .then(_ => {
-            toast('登录成功')
-            this.$data.username = ''
-            this.$data.password = ''
-            this.$eventBus.$emit('updateView')
-          })
-          .catch(err => {
-            console.error(err)
-            toast('身份认证失败')
-          })
+        try {
+          await this.$pho.login(this.$data.username, this.$data.password)
+          this.$data.username = ''
+          this.$data.password = ''
+        } catch (err) {
+          this.$toast('danger', '登录失败', err.toString())
+        }
       }
     },
 

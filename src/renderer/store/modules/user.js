@@ -12,6 +12,20 @@ const getters = {
   userData: state => state.userData
 }
 
+const mutations = {
+  setAuthData (state, value) {
+    state.authData = value
+  },
+
+  setLoginState (state, value) {
+    state.loginState = value
+  },
+
+  setUserhData (state, value) {
+    state.userData = value
+  }
+}
+
 const actions = {
   // signin
   setAuthData ({commit}, res) {
@@ -28,8 +42,7 @@ const actions = {
     commit('setAuthData', {})
     commit('setUserhData', {})
     commit('setLoginState', false)
-
-    commit('resetHomeTimeline')
+    this.dispatch('timelineHome/resetHomeTimeline')
   },
 
   fetchUserData ({commit}, res) {
@@ -44,21 +57,8 @@ const actions = {
   }
 }
 
-const mutations = {
-  setAuthData (state, value) {
-    state.authData = value
-  },
-
-  setLoginState (state, value) {
-    state.loginState = value
-  },
-
-  setUserhData (state, value) {
-    state.userData = value
-  }
-}
-
 export default {
+  namespaced: true,
   state,
   getters,
   actions,
