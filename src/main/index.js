@@ -29,7 +29,7 @@ function createWindow () {
     minHeight: 600,
     minWidth: 480,
     frame: false,
-    titleBarStyle: 'hidden-inset',
+    titleBarStyle: 'hidden',
     webPreferences: {
       webSecurity: false,
       devTools: true,

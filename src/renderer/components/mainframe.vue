@@ -17,7 +17,6 @@
         <router-view></router-view>
       </div>
 
-      <Alert></Alert>
     </div>
   </div>
 </template>
@@ -27,15 +26,13 @@ import { webFrame } from 'electron'
 import { mapGetters } from 'vuex'
 import WindowTitle from './../components/WindowTitle/index'
 import Tabbar from './../components/Tabbar/index'
-import Alert from './../components/Alert/index'
 import LoginView from './../components/Login/index'
 
 export default {
   components: {
     WindowTitle,
     Tabbar,
-    LoginView,
-    Alert
+    LoginView
   },
 
   computed: {
@@ -68,7 +65,7 @@ export default {
 }
 
 .main {
-  overflow-y: scroll;
+  overflow: hidden;
 }
 
 .login {

@@ -7,8 +7,8 @@
     <div class="content">
       <div class="headline">
         <h6 class="nickname">{{ item.user.screen_name }} <small>@{{item.user.id}}</small></h6>
-        <div class="created_at" v-if="!isFocus">{{ created_at }} <i class="fa fa-star fav" v-if="item.favorited === true"></i></div>
-        <div class="controls" v-if="isFocus">
+        <div class="created_at" v-show="!isFocus">{{ created_at }} <i class="fa fa-star fav" v-if="item.favorited === true"></i></div>
+        <div class="controls" v-show="isFocus">
           <i class="fa fa-reply" @click="reply"></i>
           <i class="fa fa-retweet" @click="repost"></i>
           <i class="fa fa-star" :class="(item.favorited === true) ? 'fav' : ''" @click="toggleFav"></i>
@@ -278,6 +278,7 @@ export default {
   flex-direction: row;
   /*background-color: blue;*/
   align-items: center;
+  height: 20px;
 }
 
 .controls i {
@@ -313,7 +314,7 @@ i.fav {
 .headline {
   display: flex;
   justify-content: space-between;
-  align-items: bottom;
+  height: 20px;
 }
 
 .created_at {

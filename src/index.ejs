@@ -11,6 +11,12 @@
     <% } %>
   </head>
   <body>
+    <style id="scroll-bar-styles">
+      /* The scrollbar hack */
+      ::-webkit-scrollbar {
+        width: 0;
+      }
+    </style>
     <div id="app"></div>
     <!-- Set `__static` path to static files in production -->
     <script>

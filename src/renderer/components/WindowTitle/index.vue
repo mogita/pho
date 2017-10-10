@@ -51,4 +51,8 @@ export default {
   font-size: 22px;
   height: 40px;
 }
+
+.new-status-button {
+  -webkit-app-region: no-drag;
+}
 </style>

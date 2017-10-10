@@ -5,14 +5,44 @@
 
 body {
   background: #ffffff;
-  font-family: 'Avenir', Helvetica, sans-serif;
+  font-family: "Avenir Next", "PingFang SC", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
 }
 
 input:focus,
 select:focus,
 textarea:focus,
 button:focus {
-    outline: none;
+  outline: none;
+}
+
+::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d6d6;
+  border: none;
+  border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d6d6d6;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #d6d6d6;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: none;
+  border-radius: 100px;
+}
+::-webkit-scrollbar-track:hover {
+  background: transparent;
+}
+::-webkit-scrollbar-track:active {
+  background: transparent;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .inner-message {

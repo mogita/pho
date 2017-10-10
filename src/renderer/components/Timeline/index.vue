@@ -26,7 +26,8 @@ export default {
     return {
       poller: null,
       delta: 5,
-      isloadingMore: false
+      isloadingMore: false,
+      scrollbarTimeoutHandle: null
     }
   },
   computed: {
@@ -53,6 +54,22 @@ export default {
       }
     },
     onScroll (el) {
+      const scrollbarStyle = document.getElementById('scroll-bar-styles')
+      scrollbarStyle.innerHTML = `
+        /* The scrollbar hack */
+        ::-webkit-scrollbar {
+          width: 6px;
+        }
+      `
+      if (this.scrollbarTimeoutHandle) clearTimeout(this.scrollbarTimeoutHandle)
+      this.scrollbarTimeoutHandle = setTimeout(() => {
+        scrollbarStyle.innerHTML = `
+          /* The scrollbar hack */
+          ::-webkit-scrollbar {
+            width: 0;
+          }
+        `
+      }, 2000)
       this.$bus.$emit('scrollHomeTimeline')
       // scroll to bottom to load more
       if (this.$refs.isLoadingMore.getBoundingClientRect().bottom <= el.clientHeight + 70) {
@@ -96,10 +113,10 @@ export default {
 
 <style lang="scss" scoped>
 .timeline-container {
-  height: calc(100vh - 40px);
+  height: calc(100vh - 80px);
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
   transition: all 0.5s;
+  overflow: overlay;
 }
 
 .is-loading-more {
