@@ -14,7 +14,10 @@ class Pho {
 
   async attemptAutoLogin () {
     // do clearance on insufficient auth info
-    if (!this.oauthToken || !this.oauthTokenSecret) this.logout()
+    if (!this.oauthToken || !this.oauthTokenSecret) {
+      this.logout()
+      return false
+    }
 
     this.api.auth({
       type: 'oauth',
@@ -22,20 +25,8 @@ class Pho {
       authInfo: [this.oauthToken, this.oauthTokenSecret]
     })
 
-    try {
-      await this.api.accountVerifyCredentials()
-      this.isAuthed = true
-      return true
-    } catch (err) {
-      // auth failed
-      if (!(err instanceof PhoNetworkError)) {
-        // should show login view if not a network error
-        this.logout()
-      } else {
-        this.errorHandler(err)
-      }
-      return false
-    }
+    this.isAuthed = true
+    return true
   }
 
   async login (username, password) {
@@ -83,6 +74,7 @@ class Pho {
     } else if (error instanceof PhoNetworkError) {
       this.toast('danger', '网络错误', error.message)
     } else if (error instanceof PhoAuthError) {
+      this.logout()
       this.toast('danger', '认证错误', error.message)
     } else {
       this.toast('danger', '错误', error.message)
