@@ -5,7 +5,7 @@
       <div class="window-title">
         <WindowTitle></WindowTitle>
       </div>
-      <div class="tab-bar" v-if="$route.meta.family === 'app'">
+      <div class="tab-bar" v-if="$route.meta.family === 'app' && loginState === true">
         <Tabbar></Tabbar>
       </div>
 

@@ -1,6 +1,5 @@
 <template>
   <div class="container">
-    <div class="navbar-spacer"></div>
     <div class="background"></div>
     <div class="white-overlay login-wrapper">
       <div class="branding">
@@ -43,6 +42,7 @@ export default {
         if (await this.$pho.login(this.$data.username, this.$data.password)) {
           this.$data.username = ''
           this.$data.password = ''
+          this.$bus.$emit('timeline.fetch.home')
         }
       }
     },

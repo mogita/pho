@@ -83,19 +83,15 @@ export default {
     }
   },
   mounted () {
+    this.$bus.$off('timeline.fetch.home')
+    this.$bus.$on('timeline.fetch.home', async () => {
+      await this.$pho.fetchHome()
+    })
+
     this.$nextTick(async () => {
       elTimeline = this.$refs.timelineContainer
       elTimeline.scrollTop = 0
-      try {
-        await this.$pho.fetchHome()
-      } catch (err) {
-        this.$toast('danger', err.msg)
-      }
-
-      // timeline polling every 30s
-      // this.poller = setInterval(_ => {
-      //   this.fetch()
-      // }, 15 * 1000)
+      await this.$pho.fetchHome()
     })
 
     window.addEventListener('keyup', (e) => {
@@ -110,9 +106,7 @@ export default {
       }
     })
   },
-  created () {
-    this.$bus.$on('updateView', this.fetch)
-  }
+  created () {}
 }
 </script>
 
