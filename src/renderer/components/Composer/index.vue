@@ -78,6 +78,7 @@ export default {
     async sendNewStatus () {
       if (this.imageFilePath) {
         if (await this.$pho.sendNewPhoto(this.draft, this.imageFilePath)) {
+          this.imageFilePath = null
           ipcRenderer.send('timeline.home.fetch', {append: true})
           ipcRenderer.send('close-status-composer')
         }
