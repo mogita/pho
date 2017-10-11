@@ -218,10 +218,10 @@ export default {
     },
 
     scrollHandler () {
-      // as this card enters the viewport (below top bar of 40px) mark this card "read"
-      if (this.$el.getBoundingClientRect().top - 80 >= 0) {
+      // as this card enters the viewport (below top bar over 80px) mark this card "read"
+      if (this.$el.getBoundingClientRect().top - 80 >= -1) {
         this.markRead(this.id)
-        this.$bus.$off('scrollHomeTimeline', this.scrollHandler)
+        this.$bus.$off('timeline.scrolled.home', this.scrollHandler)
       }
     }
   },
@@ -230,14 +230,14 @@ export default {
       // add event listener if this card is still "unread"
       if (~this.unreadIds.indexOf(this.id)) {
         // turn off event listener for scroll to mark read
-        this.$bus.$off('scrollHomeTimeline', this.scrollHandler)
-        this.$bus.$on('scrollHomeTimeline', this.scrollHandler)
+        this.$bus.$off('timeline.scrolled.home', this.scrollHandler)
+        this.$bus.$on('timeline.scrolled.home', this.scrollHandler)
       }
     })
   },
   beforeDestroy () {
     // turn off event listener for scroll to mark read
-    this.$bus.$off('scrollHomeTimeline', this.scrollHandler)
+    this.$bus.$off('timeline.scrolled.home', this.scrollHandler)
   }
 }
 </script>

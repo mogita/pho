@@ -10,6 +10,12 @@ class Pho {
     this.consumerSecret = store.state.app.consumerSecret
     this.oauthToken = store.state.user.authData.oauth_token || ''
     this.oauthTokenSecret = store.state.user.authData.oauth_token_secret || ''
+
+    this.homePoller = null
+    this.homePollerInterval = 20 * 1000
+
+    this.mentionPoller = null
+    this.mentionPollerInterval = 20 * 1000
   }
 
   async attemptAutoLogin () {
@@ -54,8 +60,9 @@ class Pho {
   async fetchHome (args = {more: false, append: false}) {
     if (!this.isAuthed) return false
     try {
-      const maxId = store.getters['timelineHome/maxId']
-      const data = await this.api.statusesHomeTimeline(null, null, maxId)
+      const maxId = args.more ? store.getters['timelineHome/maxId'] : null
+      const sinceId = args.append ? store.getters['timelineHome/sinceId'] : null
+      const data = await this.api.statusesHomeTimeline(null, sinceId, maxId)
       store.dispatch('timelineHome/appendToHomeTimeline', {
         data,
         isLoadMore: args.more,
@@ -66,6 +73,13 @@ class Pho {
       this.errorHandler(err)
       return false
     }
+  }
+
+  pollHome () {
+    clearInterval(this.homePoller)
+    this.homePoller = setInterval(() => {
+      this.fetchHome({append: true})
+    }, this.homePollerInterval || 15 * 1000)
   }
 
   errorHandler (error) {

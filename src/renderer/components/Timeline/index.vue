@@ -37,25 +37,16 @@ export default {
       'loginState'
     ])
   },
+  watch: {
+    homeTimeline () {
+      this.limitScrolltop()
+    }
+  },
   methods: {
-    initFetch () {
-      if (this.loginState) {
-        this.$api.getHomeTimeline(false, () => {
-          let el = this.$refs.timelineContainer
-          if (el.scrollTop === 0) el.scrollTop = 1
-        })
-      }
-    },
-    fetch () {
-      if (this.loginState) {
-        let el = this.$refs.timelineContainer
-        if (el.scrollTop === 0) el.scrollTop = 1
-        this.$api.getHomeTimeline(true)
-      }
-    },
     async onScroll (el) {
       this.scrollbarHack()
-      this.$bus.$emit('scrollHomeTimeline')
+      this.limitScrolltop()
+      this.$bus.$emit('timeline.scrolled.home')
       // scroll to bottom to load more
       if (this.$refs.loadingMoreBar.getBoundingClientRect().bottom <= el.clientHeight + 90) {
         if (!this.isLoadingMore) {
@@ -64,6 +55,10 @@ export default {
           this.isLoadingMore = false
         }
       }
+    },
+    limitScrolltop () {
+      const el = this.$refs.timelineContainer
+      if (el && el.scrollTop < 1) el.scrollTop = 1
     },
     scrollbarHack () {
       const scrollbarStyle = document.getElementById('scroll-bar-styles')
@@ -88,12 +83,14 @@ export default {
     this.$bus.$off('timeline.fetch.home')
     this.$bus.$on('timeline.fetch.home', async () => {
       await this.$pho.fetchHome()
+      this.$pho.pollHome()
     })
 
     this.$nextTick(async () => {
       elTimeline = this.$refs.timelineContainer
       elTimeline.scrollTop = 0
       await this.$pho.fetchHome()
+      this.$pho.pollHome()
     })
 
     window.addEventListener('keyup', (e) => {
