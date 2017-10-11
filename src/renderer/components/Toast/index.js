@@ -16,7 +16,6 @@ export default {
         const title = args[0]
         args = { title }
       }
-      console.log(args)
       const toast = CACHE[mergedOptions.id] || (CACHE[mergedOptions.id] = new CONSTRUCTOR())
       if (!toast.$el) {
         const vm = toast.$mount()

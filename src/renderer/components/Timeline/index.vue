@@ -83,10 +83,15 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
+    this.$nextTick(async () => {
       elTimeline = this.$refs.timelineContainer
       elTimeline.scrollTop = 0
-      this.$pho.fetchHome()
+      try {
+        await this.$pho.fetchHome()
+      } catch (err) {
+        this.$toast('danger', err.msg)
+      }
+
       // timeline polling every 30s
       // this.poller = setInterval(_ => {
       //   this.fetch()

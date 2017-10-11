@@ -1,5 +1,6 @@
 import fs from 'fs'
 import FanfouSdk from 'fanfou-sdk'
+import {PhoNetworkError, PhoAuthError} from './../class/error'
 
 class API {
   /**
@@ -33,7 +34,9 @@ class API {
       oauth_token: auth.authInfo[0],
       oauth_token_secret: auth.authInfo[1],
       username: auth.authInfo[0],
-      password: auth.authInfo[1]
+      password: auth.authInfo[1],
+      protocol: 'https:',
+      fakeHttps: true
     })
     if (auth.type === 'xauth') {
       return this.xauth()
@@ -52,8 +55,8 @@ class API {
   xauth () {
     return new Promise((resolve, reject) => {
       if (!this.client) return reject(new Error('fanfou client instance not ready, could not exec <xauth>'))
-      this.client.xauth(function (err, res, data) {
-        if (err) return reject(err)
+      this.client.xauth((err, res, data) => {
+        if (err) return reject(this.normalizeError(err))
         else return resolve(res)
       })
     })
@@ -70,8 +73,8 @@ class API {
   get (url = '', param = {}) {
     return new Promise((resolve, reject) => {
       if (!this.client) return reject(new Error('fanfou client instance not ready, could not exec <get> to ' + url))
-      this.client.get(url, param, function (err, res, data) {
-        if (err) return reject(err)
+      this.client.get(url, param, (err, res, data) => {
+        if (err) return reject(this.normalizeError(err))
         else return resolve(res)
       })
     })
@@ -88,8 +91,8 @@ class API {
   post (url = '', param = {}) {
     return new Promise((resolve, reject) => {
       if (!this.client) return reject(new Error('fanfou client instance not ready, could not exec <post> to ' + url))
-      this.client.post(url, param, function (err, res, data) {
-        if (err) return reject(err)
+      this.client.post(url, param, (err, res, data) => {
+        if (err) return reject(this.normalizeError(err))
         else return resolve(res)
       })
     })
@@ -107,8 +110,8 @@ class API {
   upload (photo = '', status = '', location = '') {
     return new Promise((resolve, reject) => {
       if (!this.client) return reject(new Error('fanfou client instance not ready, could not exec <upload>'))
-      this.client.upload(fs.createReadStream(photo), status, function (err, res, data) {
-        if (err) return reject(err)
+      this.client.upload(fs.createReadStream(photo), status, (err, res, data) => {
+        if (err) return reject(this.normalizeError(err))
         else return resolve(res)
       })
     })
@@ -120,6 +123,15 @@ class API {
       if (typeof v === 'boolean' || typeof v === 'number' || typeof v === 'string' || v) o[k] = this.purgeParam(v)
       return o
     }, args instanceof Array ? [] : {}) : args
+  }
+
+  normalizeError (error) {
+    const message = error.message
+    if (~message.indexOf('ENOTFOUND')) {
+      return new PhoNetworkError('无法连接网络')
+    } else {
+      return new PhoAuthError(message)
+    }
   }
 
   /****************************************
@@ -682,8 +694,8 @@ class API {
    * @returns
    * @memberof API
    */
-  statusesHomeTimeline (id = null, sinceId = null, maxId = null, count = 20, page = 1) {
-    return this.get('/statuses/home_timeline', this.purgeParam({id, since_id: sinceId, max_id: maxId, count, page}))
+  statusesHomeTimeline (id = null, sinceId = null, maxId = null, count = 20, page = 1, format = 'html') {
+    return this.get('/statuses/home_timeline', this.purgeParam({id, since_id: sinceId, max_id: maxId, count, page, format}))
   }
 
   /**

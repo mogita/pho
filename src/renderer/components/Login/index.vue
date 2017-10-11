@@ -40,12 +40,9 @@ export default {
   methods: {
     async doLogin () {
       if (this.$data.username.length > 0 && this.$data.password.length > 0) {
-        try {
-          await this.$pho.login(this.$data.username, this.$data.password)
+        if (await this.$pho.login(this.$data.username, this.$data.password)) {
           this.$data.username = ''
           this.$data.password = ''
-        } catch (err) {
-          this.$toast('danger', '登录失败', err.toString())
         }
       }
     },
