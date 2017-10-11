@@ -64,6 +64,7 @@ class Pho {
 
   logout () {
     ipcRenderer.send('user.logout')
+    store.dispatch('timelineHome/resetHomeTimeline')
     store.dispatch('user/unsetAuthData')
   }
 
@@ -152,7 +153,6 @@ class Pho {
   }
 
   toast (type, title, message) {
-    console.log(type, title, message)
     window.dispatchEvent(new CustomEvent('toast', {detail: {type, title, message}}))
   }
 }
