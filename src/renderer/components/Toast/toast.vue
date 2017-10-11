@@ -1,14 +1,13 @@
 <template>
   <div>
     <transition :name="options.transition">
-      <div class="container" v-if="visible">
+      <div class="container" v-if="visible" @click="dismiss">
         <div class="toast" :class="options.mode">
           <div class="toast-icon"><i :class="options.icon"></i></div>
           <div class="toast-body">
             <div class="toast-title">{{ options.title }}</div>
             <div class="toast-message">{{ options.message }}</div>
           </div>
-          <div class="toast-control" @click="dismiss"><i class="fa fa-times"></i></div>
         </div>
       </div>
     </transition>
@@ -117,7 +116,7 @@ export default {
   display: flex;
   align-items: center;
   color: #ffffff;
-  padding: 12px 0;
+  padding: 12px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 
@@ -138,14 +137,13 @@ export default {
   }
 
   .toast-icon {
-    flex: 0 0 60px;
+    flex: 0 0 40px;
     display: flex;
     align-items: center;
     align-self: flex-start;
     
     i {
       font-size: 18px;
-      margin: 0 auto;
       padding-top: 3px;
     }
   }
