@@ -78,7 +78,7 @@ export default {
     width: 100%;
     height: 100%;
     margin: 0 auto;
-    max-width: 600px;
+    max-width: 480px;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
