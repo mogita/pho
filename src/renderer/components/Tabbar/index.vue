@@ -86,23 +86,33 @@ export default {
     cursor: default;
 
     .tab-pill {
-      width: 80px;
+      width: 85px;
       height: 100%;
       // background: cyan;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
 
       .tab-label {
         width: 100%;
         text-align: center;
         font-size: 12px;
         padding: 4px 0;
-        border-radius: 50px;
+        border-radius: 4px;
         color: #555555;
+        transition: all .2s ease;
         
         .counter {
           font-size: 10px;
+        }
+
+        &:hover {
+          background: #ececec;
+        }
+
+        &:active {
+          background: #efefef;
         }
 
         &.active {
