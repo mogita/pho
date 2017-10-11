@@ -14,6 +14,7 @@
 <script>
 import Card from './pieces/Card'
 import { mapGetters } from 'vuex'
+import { ipcRenderer } from 'electron'
 
 let elTimeline
 
@@ -80,8 +81,8 @@ export default {
     }
   },
   mounted () {
-    this.$bus.$off('timeline.fetch.home')
-    this.$bus.$on('timeline.fetch.home', async () => {
+    this.$bus.$off('timeline.home.fetch')
+    this.$bus.$on('timeline.home.fetch', async () => {
       await this.$pho.fetchHome()
       this.$pho.pollHome()
     })
@@ -99,7 +100,11 @@ export default {
       }
     })
   },
-  created () {}
+  created () {
+    ipcRenderer.on('timeline.home.fetch', async (event, args) => {
+      await this.$pho.fetchHome(args)
+    })
+  }
 }
 </script>
 

@@ -42,7 +42,7 @@ export default {
         if (await this.$pho.login(this.$data.username, this.$data.password)) {
           this.$data.username = ''
           this.$data.password = ''
-          this.$bus.$emit('timeline.fetch.home')
+          this.$bus.$emit('timeline.home.fetch')
         }
       }
     },

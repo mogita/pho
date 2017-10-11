@@ -24,6 +24,7 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
+    name: 'mainWindow',
     height: 900,
     width: 480,
     minHeight: 600,
@@ -64,6 +65,7 @@ function createWindow () {
    * Status composer window
    */
   let statusComposer = new BrowserWindow({
+    name: 'statusComposer',
     height: 200,
     width: 340,
     alwaysOnTop: true,
@@ -104,6 +106,23 @@ function createWindow () {
     statusComposer.webContents.send('show-status-composer', args)
     statusComposer.show()
     statusComposer.focus()
+  })
+
+  ipcMain.on('timeline.home.fetch', (event, args) => {
+    mainWindow.webContents.send('timeline.home.fetch', args)
+  })
+
+  ipcMain.on('user.logout', (event, args) => {
+    if (event.sender.browserWindowOptions.name === 'mainWindow') {
+      statusComposer.hide()
+      statusComposer.webContents.send('user.logout')
+    }
+  })
+
+  ipcMain.on('user.login', (event, args) => {
+    if (event.sender.browserWindowOptions.name === 'mainWindow') {
+      statusComposer.webContents.send('user.login', args)
+    }
   })
 }
 

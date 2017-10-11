@@ -22,7 +22,6 @@
 
 <script>
 import { remote, ipcRenderer, webFrame } from 'electron'
-import api from './../../api'
 const dialog = remote.dialog
 
 export default {
@@ -76,15 +75,16 @@ export default {
       }
     },
 
-    sendNewStatus () {
+    async sendNewStatus () {
       if (this.imageFilePath) {
-        api.sendNewPhoto(this.draft, this.imageFilePath)
-          .then(() => {
-            ipcRenderer.send('close-status-composer')
-          })
-          .catch((err) => console.error(err))
+        if (await this.$pho.sendNewPhoto(this.draft, this.imageFilePath)) {
+          ipcRenderer.send('timeline.home.fetch', {append: true})
+          ipcRenderer.send('close-status-composer')
+        }
       } else {
-        let args = {}
+        const args = {
+          status: this.draft
+        }
         switch (this.action) {
           case 'new':
             break
@@ -98,11 +98,10 @@ export default {
           default:
             break
         }
-        api.sendNewStatus(this.draft, args)
-          .then(() => {
-            ipcRenderer.send('close-status-composer')
-          })
-          .catch((err) => console.error(err))
+        if (await this.$pho.sendNewStatus(args)) {
+          ipcRenderer.send('timeline.home.fetch', {append: true})
+          ipcRenderer.send('close-status-composer')
+        }
       }
     }
   },

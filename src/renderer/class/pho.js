@@ -1,3 +1,4 @@
+import { ipcRenderer } from 'electron'
 import store from './../store'
 import API from './../api'
 import {PhoRuntimeError, PhoNetworkError, PhoAuthError} from './error'
@@ -16,6 +17,13 @@ class Pho {
 
     this.mentionPoller = null
     this.mentionPollerInterval = 20 * 1000
+
+    ipcRenderer.on('user.logout', this.logout)
+    ipcRenderer.on('user.login', this.setAuthData)
+  }
+
+  async setAuthData (event, args) {
+    await store.dispatch('user/setAuthData', args)
   }
 
   async attemptAutoLogin () {
@@ -42,18 +50,20 @@ class Pho {
         consumerInfo: [this.consumerKey, this.consumerSecret],
         authInfo: [username, password]
       })
-      await store.dispatch('user/setAuthData', authRes)
+      ipcRenderer.send('user.login', authRes)
+      this.setAuthData(null, authRes)
       await this.api.accountVerifyCredentials()
       this.isAuthed = true
       return true
     } catch (err) {
       // auth failed
-      this.errorHandler(err)
+      this.handleError(err)
       return false
     }
   }
 
   logout () {
+    ipcRenderer.send('user.logout')
     store.dispatch('user/unsetAuthData')
   }
 
@@ -70,7 +80,7 @@ class Pho {
       })
       return true
     } catch (err) {
-      this.errorHandler(err)
+      this.handleError(err)
       return false
     }
   }
@@ -93,12 +103,41 @@ class Pho {
       store.dispatch('timelineHome/alterFav', msgId)
       return true
     } catch (err) {
-      this.errorHandler(err)
+      this.handleError(err)
       return false
     }
   }
 
-  errorHandler (error) {
+  async sendNewStatus (args) {
+    if (!this.isAuthed) return false
+    try {
+      await this.api.statusesUpdate(
+        args.status,
+        args.inReplyToStatusId,
+        args.inReplyToUserId,
+        args.repostStatusId,
+        args.location
+      )
+      return true
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  async sendNewPhoto (status, imageFilePath) {
+    if (!imageFilePath) return false
+    if (typeof status === 'undefined') status = ''
+    try {
+      await this.api.photosUpload(imageFilePath, status)
+      return true
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  handleError (error) {
     /* global CustomEvent */
     if (error instanceof PhoRuntimeError) {
       this.toast('danger', '错误', error.message)
@@ -113,6 +152,7 @@ class Pho {
   }
 
   toast (type, title, message) {
+    console.log(type, title, message)
     window.dispatchEvent(new CustomEvent('toast', {detail: {type, title, message}}))
   }
 }
