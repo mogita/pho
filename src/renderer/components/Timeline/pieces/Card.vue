@@ -42,8 +42,6 @@
 <script>
 import { remote, ipcRenderer } from 'electron'
 import { mapGetters, mapActions } from 'vuex'
-import store from '../../../store'
-// import api from '../../../api'
 import moment from 'moment'
 moment.locale('zh-cn')
 
@@ -73,7 +71,6 @@ function createWindow (width, height, imageUrl) {
 }
 
 export default {
-  store,
   name: 'message-card',
   props: ['id', 'item'],
   data () {
@@ -92,15 +89,8 @@ export default {
   },
 
   methods: {
-    ...mapActions([
-      'setShowCraftStatus',
-      'setStatusContent',
-      'setInReplyToStatusId',
-      'setInReplyToUserId',
-      'setRepostStatusId',
-      'setStatusLocation',
-      'markRead',
-      'isUnread'
+    ...mapActions('timelineHome', [
+      'markRead'
     ]),
 
     getUnescapedText () {
@@ -128,11 +118,6 @@ export default {
             width = width * ratio
           }
 
-          // ipcRenderer.send('show-image-preview', {
-          //   height: Math.ceil(height),
-          //   width: Math.ceil(width),
-          //   image: url
-          // })
           const window = createWindow(width, height, url)
           window.on('ready-to-show', () => {
             window.show()
@@ -165,14 +150,6 @@ export default {
         refUserId: this.item.user.id,
         cursorPos: 140
       })
-      // this.setInReplyToStatusId(this.item.id)
-      // this.setInReplyToUserId(this.item.user.id)
-      // this.setStatusContent(`@${this.item.user.screen_name} `)
-      // this.setShowCraftStatus(true)
-      // this.$nextTick(_ => {
-      //   // set focus on status input
-      //   this.$bus.$emit('setFocus', 140)
-      // })
     },
 
     repost () {
@@ -181,13 +158,6 @@ export default {
         action: 'repost',
         refStatusId: this.item.id
       })
-      // this.setRepostStatusId(this.item.id)
-      // this.setStatusContent(`转@${this.item.user.screen_name} ${this.stripHTML(this.item.text)}`)
-      // this.setShowCraftStatus(true)
-      // this.$nextTick(_ => {
-      //   // set focus on status input
-      //   this.$bus.$emit('setFocus', 0)
-      // })
     },
 
     toggleFav () {
