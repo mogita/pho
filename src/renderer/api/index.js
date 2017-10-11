@@ -1,6 +1,6 @@
 import fs from 'fs'
 import FanfouSdk from 'fanfou-sdk'
-import {PhoNetworkError, PhoAuthError} from './../class/error'
+import {PhoRuntimeError, PhoNetworkError, PhoAuthError} from './../class/error'
 
 class API {
   /**
@@ -130,7 +130,7 @@ class API {
     if (~message.indexOf('ENOTFOUND')) return new PhoNetworkError('无法连接饭否服务器')
     else if (~message.indexOf('没有这个用户')) return new PhoAuthError('没有这个用户')
     else if (~message.indexOf('密码错误')) return new PhoAuthError('用户名或密码错误')
-    else return new PhoAuthError(message)
+    else return new PhoRuntimeError(message)
   }
 
   /****************************************
@@ -531,7 +531,7 @@ class API {
    * @memberof API
    */
   favoritesDestroy (id = null) {
-    return this.post('/favorites/destroy', this.purgeParam({id}))
+    return (id) ? this.post(`/favorites/destroy/${id}`) : false
   }
 
   /**
@@ -555,7 +555,7 @@ class API {
    * @memberof API
    */
   favoritesCreate (id = null) {
-    return this.post('/favorites/create', this.purgeParam({id}))
+    return (id) ? this.post(`/favorites/create/${id}`) : false
   }
 
   /****************************************

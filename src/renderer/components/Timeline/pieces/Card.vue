@@ -90,7 +90,8 @@ export default {
 
   methods: {
     ...mapActions('timelineHome', [
-      'markRead'
+      'markRead',
+      'alterFav'
     ]),
 
     getUnescapedText () {
@@ -160,21 +161,10 @@ export default {
       })
     },
 
-    toggleFav () {
-      // if (this.item.favorited === false) {
-      //   api.setFav(this.item.id)
-      //     .then(_ => {
-      //       this.item.favorited = true
-      //     })
-      //     .catch(err => console.error(err))
-      // } else if (this.item.favorited === true) {
-      //   api.unsetFav(this.item.id)
-      //     .then(_ => {
-      //       this.item.favorited = false
-      //     })
-      //     .catch(err => console.error(err))
-      // }
-      // will not call any api if fav state is arbitrary values
+    async toggleFav () {
+      if (await this.$pho.toggleFav(this.item.favorited, this.item.id)) {
+        this.alterFav(this.item.id)
+      }
     },
 
     stripHTML (html) {

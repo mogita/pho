@@ -82,6 +82,21 @@ class Pho {
     }, this.homePollerInterval || 15 * 1000)
   }
 
+  async toggleFav (currentFavState, msgId) {
+    if (!this.isAuthed) return false
+    try {
+      if (currentFavState === false) {
+        await this.api.favoritesCreate(msgId)
+      } else {
+        await this.api.favoritesDestroy(msgId)
+      }
+      return true
+    } catch (err) {
+      this.errorHandler(err)
+      return false
+    }
+  }
+
   errorHandler (error) {
     /* global CustomEvent */
     if (error instanceof PhoRuntimeError) {

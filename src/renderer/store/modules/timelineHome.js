@@ -34,6 +34,11 @@ const mutations = {
     // accepts a status id as "value"
     state.unreadIds = _.filter(state.unreadIds, o => { return o !== value })
   },
+  alterFav (state, msgId) {
+    if (!msgId) return false
+    const item = _.find(state.timeline, {id: msgId})
+    item.favorited = !item.favorited
+  },
   resetHomeTimeline (state, value) {
     state.timeline = []
     state.sinceId = ''
@@ -50,6 +55,9 @@ const actions = {
   },
   markRead (ctx, value) {
     ctx.commit('markRead', value)
+  },
+  alterFav (ctx, value) {
+    ctx.commit('alterFav', value)
   }
 }
 
