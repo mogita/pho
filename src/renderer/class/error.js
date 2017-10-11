@@ -23,6 +23,15 @@ export class PhoAuthError extends Error {
     super(message)
     this.constructor = PhoAuthError
     this.__proto__ = PhoAuthError.prototype
-    Error.captureStackTrace(this, PhoNetworkError)
+    Error.captureStackTrace(this, PhoAuthError)
+  }
+}
+
+export class PhoPermissionError extends Error {
+  constructor (message) {
+    super(message)
+    this.constructor = PhoPermissionError
+    this.__proto__ = PhoPermissionError.prototype
+    Error.captureStackTrace(this, PhoPermissionError)
   }
 }
