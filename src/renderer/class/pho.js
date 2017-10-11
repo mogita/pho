@@ -90,6 +90,7 @@ class Pho {
       } else {
         await this.api.favoritesDestroy(msgId)
       }
+      store.dispatch('timelineHome/alterFav', msgId)
       return true
     } catch (err) {
       this.errorHandler(err)

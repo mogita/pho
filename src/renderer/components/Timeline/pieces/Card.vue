@@ -90,8 +90,7 @@ export default {
 
   methods: {
     ...mapActions('timelineHome', [
-      'markRead',
-      'alterFav'
+      'markRead'
     ]),
 
     getUnescapedText () {
@@ -161,10 +160,8 @@ export default {
       })
     },
 
-    async toggleFav () {
-      if (await this.$pho.toggleFav(this.item.favorited, this.item.id)) {
-        this.alterFav(this.item.id)
-      }
+    toggleFav () {
+      this.$pho.toggleFav(this.item.favorited, this.item.id)
     },
 
     stripHTML (html) {
