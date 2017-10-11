@@ -19,7 +19,7 @@ export default {
       const toast = CACHE[mergedOptions.id] || (CACHE[mergedOptions.id] = new CONSTRUCTOR())
       if (!toast.$el) {
         const vm = toast.$mount()
-        document.querySelector(args.parent || 'body').appendChild(vm.$el)
+        document.querySelector(args.parent || '#content-wrapper').appendChild(vm.$el)
       }
       return toast.enqueue(args)
     }

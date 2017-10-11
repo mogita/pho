@@ -79,14 +79,18 @@ class Pho {
   errorHandler (error) {
     /* global CustomEvent */
     if (error instanceof PhoRuntimeError) {
-      window.dispatchEvent(new CustomEvent('toast', {detail: {type: 'danger', title: '错误', message: error.message}}))
+      this.toast('danger', '错误', error.message)
     } else if (error instanceof PhoNetworkError) {
-      window.dispatchEvent(new CustomEvent('toast', {detail: {type: 'danger', title: '网络错误', message: error.message}}))
+      this.toast('danger', '网络错误', error.message)
     } else if (error instanceof PhoAuthError) {
-      window.dispatchEvent(new CustomEvent('toast', {detail: {type: 'danger', title: '认证错误', message: error.message}}))
+      this.toast('danger', '认证错误', error.message)
     } else {
-      window.dispatchEvent(new CustomEvent('toast', {detail: {type: 'danger', title: '错误', message: error.message}}))
+      this.toast('danger', '错误', error.message)
     }
+  }
+
+  toast (type, title, message) {
+    window.dispatchEvent(new CustomEvent('toast', {detail: {type, title, message}}))
   }
 }
 

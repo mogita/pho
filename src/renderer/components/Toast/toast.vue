@@ -19,7 +19,7 @@
 const OPTIONS_TEMPLATE = {
   id: 'vue-zydialog-toast', // DOM id
   className: '', // additional class name
-  override: false, // current toast overrides the queue and cancel any toasts before it
+  override: true, // current toast overrides the queue and cancel any toasts before it
   transition: 'slidedown', // transition name
   icon: 'fa fa-info fa-fw', // toast icon
   duration: 2000, // milliseconds before auto close, set to 0 or any falsy value to disable auto close
@@ -105,7 +105,7 @@ export default {
 <style lang="scss" scoped>
 .container {
   position: absolute;
-  top: 40px;
+  top: 0;
   left: calc((100vw - 480px) / 2);
   width: 480px;
   z-index: 10000;

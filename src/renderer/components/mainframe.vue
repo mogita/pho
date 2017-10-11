@@ -9,12 +9,14 @@
         <Tabbar></Tabbar>
       </div>
 
-      <div class="login" v-if="loginState !== true">
-        <LoginView></LoginView>
-      </div>
+      <div class="content-wrapper" id="content-wrapper">
+        <div class="login" v-if="loginState !== true">
+          <LoginView></LoginView>
+        </div>
 
-      <div class="main" v-if="loginState === true">
-        <router-view></router-view>
+        <div class="main" v-if="loginState === true">
+          <router-view></router-view>
+        </div>
       </div>
 
     </div>
@@ -52,6 +54,7 @@ export default {
   display: flex;
   flex-flow: column;
   height: 100vh;
+  position: relative;
 }
 
 .window-title {
@@ -61,7 +64,11 @@ export default {
 
 .tab-bar {
   flex: 0 0 40px;
-  z-index: 99;
+  z-index: 999999;
+}
+
+.content-wrapper {
+  position: relative;
 }
 
 .main {
