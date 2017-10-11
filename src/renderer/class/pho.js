@@ -51,14 +51,15 @@ class Pho {
     store.dispatch('user/unsetAuthData')
   }
 
-  async fetchHome () {
+  async fetchHome (args = {more: false, append: false}) {
     if (!this.isAuthed) return false
     try {
-      const data = await this.api.statusesHomeTimeline()
+      const maxId = store.getters['timelineHome/maxId']
+      const data = await this.api.statusesHomeTimeline(null, null, maxId)
       store.dispatch('timelineHome/appendToHomeTimeline', {
         data,
-        isLoadMore: false,
-        isAppend: false
+        isLoadMore: args.more,
+        isAppend: args.append
       })
       return true
     } catch (err) {

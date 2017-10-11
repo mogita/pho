@@ -8,6 +8,7 @@
         <Loading></Loading>
       </div>
     </transition>
+    <button @click="logout">Logout</button>
     <div class="new-status-button" v-if="$route.meta.family === 'app' && loginState">
       <NewStatusButton></NewStatusButton>
     </div>
@@ -24,14 +25,18 @@ export default {
     NewStatusButton,
     Loading
   },
-
   computed: {
-    ...mapGetters([
+    ...mapGetters('indicator', [
       'showLoading'
     ]),
     ...mapGetters('user', [
       'loginState'
     ])
+  },
+  methods: {
+    logout () {
+      this.$pho.logout()
+    }
   }
 }
 </script>

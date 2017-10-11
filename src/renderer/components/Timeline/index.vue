@@ -4,8 +4,8 @@
       <template v-for="(item, index) in homeTimeline" v-if="item.hasOwnProperty('user')">
         <Card :item="item" :id="item.id" :key="item.id"></Card>
       </template>
-      <div class="is-loading-more" ref="isLoadingMore">
-        正在载入...
+      <div class="loading-more-bar" ref="loadingMoreBar">
+        •••
       </div>
     </div>
   </div>
@@ -53,7 +53,19 @@ export default {
         this.$api.getHomeTimeline(true)
       }
     },
-    onScroll (el) {
+    async onScroll (el) {
+      this.scrollbarHack()
+      this.$bus.$emit('scrollHomeTimeline')
+      // scroll to bottom to load more
+      if (this.$refs.loadingMoreBar.getBoundingClientRect().bottom <= el.clientHeight + 90) {
+        if (!this.isLoadingMore) {
+          this.isLoadingMore = true
+          await this.$pho.fetchHome({more: true})
+          this.isLoadingMore = false
+        }
+      }
+    },
+    scrollbarHack () {
       const scrollbarStyle = document.getElementById('scroll-bar-styles')
       scrollbarStyle.innerHTML = `
         /* The scrollbar hack */
@@ -70,16 +82,6 @@ export default {
           }
         `
       }, 2000)
-      this.$bus.$emit('scrollHomeTimeline')
-      // scroll to bottom to load more
-      if (this.$refs.isLoadingMore.getBoundingClientRect().bottom <= el.clientHeight + 70) {
-        if (this.loginState && !this.isLoadingMore) {
-          this.isLoadingMore = true
-          this.$api.getMoreHomeTimeline(() => {
-            this.isLoadingMore = false
-          })
-        }
-      }
     }
   },
   mounted () {
@@ -98,12 +100,6 @@ export default {
       if (e.key === 'r' && !this.showCraftStatus) {
         this.fetch()
       }
-
-      if (e.key === 'u' && !this.showCraftStatus) {
-        console.log('key and showCraftStatus: ', e.key, this.showCraftStatus)
-        clearInterval(this.poller)
-        this.$api.unauth()
-      }
     })
   },
   created () {}
@@ -118,7 +114,7 @@ export default {
   overflow: overlay;
 }
 
-.is-loading-more {
+.loading-more-bar {
   font-size: 12px;
   line-height: 30px;
   text-align: center;
