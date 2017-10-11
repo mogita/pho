@@ -16,11 +16,11 @@ const getters = {
 
 const mutations = {
   appendToHomeTimeline (state, value) {
-    let data = value.data
-    let isAppend = value.isAppend
-    let isLoadMore = value.isLoadMore
+    const data = value.data
+    const isAppend = value.isAppend
+    const isLoadMore = value.isLoadMore
     if (typeof data !== 'object' || data.length === 0) return false
-    let arr = _.values(data).filter(item => { return typeof item === 'object' })
+    const arr = _.values(data).filter(item => { return typeof item === 'object' })
     if (isAppend) state.unreadIds = _.concat(state.unreadIds, _.map(arr, 'id'))
     if (isLoadMore) {
       state.timeline = [...state.timeline, ...arr]

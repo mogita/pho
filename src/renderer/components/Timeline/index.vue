@@ -58,7 +58,7 @@ export default {
     },
     limitScrolltop () {
       const el = this.$refs.timelineContainer
-      if (el && el.scrollTop < 1) el.scrollTop = 1
+      if (el && el.scrollTop <= 1) el.scrollTop = 1
     },
     scrollbarHack () {
       const scrollbarStyle = document.getElementById('scroll-bar-styles')
