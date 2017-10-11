@@ -127,11 +127,10 @@ class API {
 
   normalizeError (error) {
     const message = error.message
-    if (~message.indexOf('ENOTFOUND')) {
-      return new PhoNetworkError('无法连接饭否服务器')
-    } else {
-      return new PhoAuthError(message)
-    }
+    if (~message.indexOf('ENOTFOUND')) return new PhoNetworkError('无法连接饭否服务器')
+    else if (~message.indexOf('没有这个用户')) return new PhoAuthError('没有这个用户')
+    else if (~message.indexOf('密码错误')) return new PhoAuthError('用户名或密码错误')
+    else return new PhoAuthError(message)
   }
 
   /****************************************
