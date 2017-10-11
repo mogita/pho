@@ -262,9 +262,13 @@ export default {
 }
 
 .avatar img {
-  width: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 3px;
   user-select: none;
+  background: url('./../../../assets/images/generic_avatar.png') no-repeat;
+  background-size: cover;
+  background-position: center center;
 }
 
 .content {
@@ -353,7 +357,7 @@ i.fav {
   display: flex;
   width: 100%;
   max-width: 640px;
-  max-height: 220px;
+  height: 220px;
 
   .image-mask {
     position: absolute;
