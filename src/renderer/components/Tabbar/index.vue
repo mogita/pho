@@ -9,13 +9,13 @@
 
       <div class="tab-pill">
         <div class="tab-label" :class="{active: activeTab === 'mention'}" @click="switchTab('mention')">
-          <i class="fa fa-at fa-fw"></i><span class="counter"> 123</span>
+          <i class="fa fa-at fa-fw"></i><span class="counter"></span>
         </div>
       </div>
 
       <div class="tab-pill">
         <div class="tab-label" :class="{active: activeTab === 'dm'}" @click="switchTab('dm')">
-          <i class="fa fa-envelope-o fa-fw"></i><span class="counter"> 1234</span>
+          <i class="fa fa-envelope-o fa-fw"></i><span class="counter"></span>
         </div>
       </div>
 
