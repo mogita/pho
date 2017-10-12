@@ -306,6 +306,8 @@ i.fav {
   font-size: 14px;
   color: #444444;
   line-height: 22px;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .image-preview {
