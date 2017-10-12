@@ -16,7 +16,7 @@ export default new Router({
         {
           path: '',
           name: 'timelineModule',
-          component: require('./../components/Timeline/index').default,
+          component: require('./../components/Timeline/home').default,
           meta: {
             family: 'app'
           }
