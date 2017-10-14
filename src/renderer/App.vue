@@ -1,13 +1,18 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <mainframe/>
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'pho'
+import mainframe from './components/mainframe'
+
+export default {
+  name: 'pho',
+  components: {
+    mainframe
   }
+}
 </script>
 
 <style>

@@ -11,33 +11,27 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: require('./../components/mainframe').default,
-      children: [
-        {
-          path: '',
-          name: 'timelineModule',
-          component: require('./../components/Timeline/home').default,
-          meta: {
-            family: 'app'
-          }
-        },
-        {
-          path: 'preview',
-          name: 'previewModule',
-          component: require('./../components/Preview/index').default,
-          meta: {
-            family: 'util'
-          }
-        },
-        {
-          path: 'composer',
-          name: 'statusComposerModule',
-          component: require('./../components/Composer/index').default,
-          meta: {
-            family: 'util'
-          }
-        }
-      ]
+      name: 'timelineModule',
+      component: require('./../components/Timeline/home').default,
+      meta: {
+        family: 'app'
+      }
+    },
+    {
+      path: '/preview',
+      name: 'previewModule',
+      component: require('./../components/Preview/index').default,
+      meta: {
+        family: 'util'
+      }
+    },
+    {
+      path: '/composer',
+      name: 'statusComposerModule',
+      component: require('./../components/Composer/index').default,
+      meta: {
+        family: 'util'
+      }
     }
   ]
 })
