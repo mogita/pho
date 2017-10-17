@@ -44,19 +44,20 @@ export default {
     ...mapGetters('timelineHome', [
       'unreadIds'
     ]),
+    ...mapGetters('tab', [
+      'activeTab'
+    ]),
     homeTlUnreadCount () {
       return this.unreadIds.length || 0
     }
   },
   watch: {},
   data () {
-    return {
-      activeTab: 'home'
-    }
+    return {}
   },
   methods: {
     switchTab (tab) {
-      this.activeTab = tab
+      this.$store.dispatch('tab/setActiveTab', tab)
     }
   },
   mounted () {}

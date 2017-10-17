@@ -93,6 +93,31 @@ class Pho {
     }, this.homePollerInterval || 15 * 1000)
   }
 
+  async fetchMention (args = {more: false, append: false}) {
+    if (!this.isAuthed) return false
+    try {
+      const maxId = args.more ? store.getters['timelineMention/maxId'] : null
+      const sinceId = args.append ? store.getters['timelineMention/sinceId'] : null
+      const data = await this.api.statusesHomeTimeline(null, sinceId, maxId)
+      store.dispatch('timelineMention/appendToMentionTimeline', {
+        data,
+        isLoadMore: args.more,
+        isAppend: args.append
+      })
+      return true
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  pollMention () {
+    clearInterval(this.homePoller)
+    this.homePoller = setInterval(() => {
+      this.fetchHome({append: true})
+    }, this.homePollerInterval || 15 * 1000)
+  }
+
   async toggleFav (currentFavState, msgId) {
     if (!this.isAuthed) return false
     try {

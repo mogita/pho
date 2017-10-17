@@ -1,8 +1,8 @@
 <template>
-  <div class="timeline-container" id="home-timeline-container" v-on:scroll="onScroll($el)" ref="homeTimelineContainer">
+  <div class="timeline-container" id="mention-timeline-container" v-on:scroll="onScroll($el)" ref="mentionTimelineContainer">
     <div id="timeline">
       <template v-for="(item, index) in homeTimeline" v-if="item.hasOwnProperty('user')">
-        <Card :item="item" :id="item.id" :key="'home-' + item.id" :belongsTo="'home'"></Card>
+        <Card :item="item" :id="item.id" :key="'mention-' + item.id" :belongsTo="'mention'"></Card>
       </template>
       <div class="loading-more-bar" ref="loadingMoreBar">
         •••
@@ -22,10 +22,9 @@ export default {
   components: {
     Card
   },
-  name: 'timeline',
+  name: 'timelineMention',
   data () {
     return {
-      poller: null,
       delta: 5,
       isloadingMore: false,
       scrollbarTimeoutHandle: null
@@ -46,8 +45,8 @@ export default {
   methods: {
     async onScroll (el) {
       this.scrollbarHack()
-      this.limitScrolltop() // potential UI perf bottleneck
-      this.$bus.$emit('timeline.scrolled.home')
+      this.limitScrolltop()
+      this.$bus.$emit('timeline.scrolled.mention')
       // scroll to bottom to load more
       if (this.$refs.loadingMoreBar.getBoundingClientRect().bottom <= el.clientHeight + 90) {
         if (!this.isLoadingMore) {
@@ -58,7 +57,7 @@ export default {
       }
     },
     limitScrolltop () {
-      const el = this.$refs.homeTimelineContainer
+      const el = this.$refs.mentionTimelineContainer
       if (el && el.scrollTop <= 1) el.scrollTop = 1
     },
     scrollbarHack () {
@@ -81,14 +80,14 @@ export default {
     }
   },
   mounted () {
-    this.$bus.$off('timeline.home.fetch')
-    this.$bus.$on('timeline.home.fetch', async () => {
+    this.$bus.$off('timeline.mention.fetch')
+    this.$bus.$on('timeline.mention.fetch', async () => {
       await this.$pho.fetchHome()
       this.$pho.pollHome()
     })
 
     this.$nextTick(async () => {
-      elTimeline = this.$refs.homeTimelineContainer
+      elTimeline = this.$refs.mentionTimelineContainer
       elTimeline.scrollTop = 0
       await this.$pho.fetchHome()
       this.$pho.pollHome()
@@ -101,7 +100,7 @@ export default {
     })
   },
   created () {
-    ipcRenderer.on('timeline.home.fetch', async (event, args) => {
+    ipcRenderer.on('timeline.mention.fetch', async (event, args) => {
       await this.$pho.fetchHome(args)
     })
   }

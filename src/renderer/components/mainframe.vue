@@ -15,7 +15,8 @@
         </div>
 
         <div class="main" v-if="loginState === true">
-          <router-view></router-view>
+          <timelineHome v-show="activeTab === 'home'"></timelineHome>
+          <timelineMention v-show="activeTab === 'mention'"></timelineMention>
         </div>
       </div>
 
@@ -29,17 +30,24 @@ import { mapGetters } from 'vuex'
 import WindowTitle from './../components/WindowTitle/index'
 import Tabbar from './../components/Tabbar/index'
 import LoginView from './../components/Login/index'
+import timelineHome from './../components/Timeline/home'
+import timelineMention from './../components/Timeline/mention'
 
 export default {
   components: {
     WindowTitle,
     Tabbar,
-    LoginView
+    LoginView,
+    timelineHome,
+    timelineMention
   },
 
   computed: {
     ...mapGetters('user', [
       'loginState'
+    ]),
+    ...mapGetters('tab', [
+      'activeTab'
     ])
   },
   mounted () {},

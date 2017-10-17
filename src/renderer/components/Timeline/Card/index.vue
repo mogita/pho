@@ -72,7 +72,7 @@ function createWindow (width, height, imageUrl) {
 
 export default {
   name: 'message-card',
-  props: ['id', 'item'],
+  props: ['id', 'item', 'belongsTo'],
   data () {
     return {
       created_at: moment(Date.parse(this.item.created_at)).fromNow(),
@@ -178,7 +178,7 @@ export default {
       // as this card enters the viewport (below top bar over 80px) mark this card "read"
       if (this.$el.getBoundingClientRect().top - 80 >= -1) {
         this.markRead(this.id)
-        this.$bus.$off('timeline.scrolled.home', this.scrollHandler)
+        this.$bus.$off(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
       }
     }
   },
@@ -187,14 +187,14 @@ export default {
       // add event listener if this card is still "unread"
       if (~this.unreadIds.indexOf(this.id)) {
         // turn off event listener for scroll to mark read
-        this.$bus.$off('timeline.scrolled.home', this.scrollHandler)
-        this.$bus.$on('timeline.scrolled.home', this.scrollHandler)
+        this.$bus.$off(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
+        this.$bus.$on(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
       }
     })
   },
   beforeDestroy () {
     // turn off event listener for scroll to mark read
-    this.$bus.$off('timeline.scrolled.home', this.scrollHandler)
+    this.$bus.$off(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
   }
 }
 </script>
