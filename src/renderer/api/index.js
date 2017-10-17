@@ -808,8 +808,8 @@ class API {
    * @returns
    * @memberof API
    */
-  statusesMentions (sinceId = null, maxId = null, count = 20, page = 1) {
-    return this.get('/statuses/mentions', this.purgeParam({since_id: sinceId, max_id: maxId, count, page}))
+  statusesMentions (sinceId = null, maxId = null, count = 20, page = 1, format = 'html') {
+    return this.get('/statuses/mentions', this.purgeParam({since_id: sinceId, max_id: maxId, count, page, format}))
   }
 
   /**

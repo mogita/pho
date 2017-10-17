@@ -1,7 +1,7 @@
 <template>
   <div class="timeline-container" id="mention-timeline-container" v-on:scroll="onScroll($el)" ref="mentionTimelineContainer">
     <div id="timeline">
-      <template v-for="(item, index) in homeTimeline" v-if="item.hasOwnProperty('user')">
+      <template v-for="(item, index) in timelineMention" v-if="item.hasOwnProperty('user')">
         <Card :item="item" :id="item.id" :key="'mention-' + item.id" :belongsTo="'mention'"></Card>
       </template>
       <div class="loading-more-bar" ref="loadingMoreBar">
@@ -31,14 +31,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('timelineHome', [
-      'showCraftStatus',
-      'homeTimeline',
-      'loginState'
+    ...mapGetters('timelineMention', [
+      'timelineMention'
     ])
   },
   watch: {
-    homeTimeline () {
+    timelineMention () {
       this.limitScrolltop()
     }
   },
@@ -51,7 +49,7 @@ export default {
       if (this.$refs.loadingMoreBar.getBoundingClientRect().bottom <= el.clientHeight + 90) {
         if (!this.isLoadingMore) {
           this.isLoadingMore = true
-          await this.$pho.fetchHome({more: true})
+          await this.$pho.fetchMention({more: true})
           this.isLoadingMore = false
         }
       }
@@ -82,26 +80,20 @@ export default {
   mounted () {
     this.$bus.$off('timeline.mention.fetch')
     this.$bus.$on('timeline.mention.fetch', async () => {
-      await this.$pho.fetchHome()
-      this.$pho.pollHome()
+      await this.$pho.fetchMention()
+      this.$pho.pollMention()
     })
 
     this.$nextTick(async () => {
       elTimeline = this.$refs.mentionTimelineContainer
       elTimeline.scrollTop = 0
-      await this.$pho.fetchHome()
-      this.$pho.pollHome()
-    })
-
-    window.addEventListener('keyup', (e) => {
-      if (e.key === 'r' && !this.showCraftStatus) {
-        this.fetch()
-      }
+      await this.$pho.fetchMention()
+      this.$pho.pollMention()
     })
   },
   created () {
     ipcRenderer.on('timeline.mention.fetch', async (event, args) => {
-      await this.$pho.fetchHome(args)
+      await this.$pho.fetchMention(args)
     })
   }
 }

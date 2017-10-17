@@ -98,8 +98,8 @@ class Pho {
     try {
       const maxId = args.more ? store.getters['timelineMention/maxId'] : null
       const sinceId = args.append ? store.getters['timelineMention/sinceId'] : null
-      const data = await this.api.statusesHomeTimeline(null, sinceId, maxId)
-      store.dispatch('timelineMention/appendToMentionTimeline', {
+      const data = await this.api.statusesMentions(sinceId, maxId)
+      store.dispatch('timelineMention/appendToTimelineMention', {
         data,
         isLoadMore: args.more,
         isAppend: args.append
@@ -112,10 +112,10 @@ class Pho {
   }
 
   pollMention () {
-    clearInterval(this.homePoller)
-    this.homePoller = setInterval(() => {
-      this.fetchHome({append: true})
-    }, this.homePollerInterval || 15 * 1000)
+    clearInterval(this.mentionPoller)
+    this.mentionPoller = setInterval(() => {
+      this.fetchMention({append: true})
+    }, this.mentionPollerInterval || 15 * 1000)
   }
 
   async toggleFav (currentFavState, msgId) {
