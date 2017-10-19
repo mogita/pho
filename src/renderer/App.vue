@@ -1,6 +1,5 @@
 <template>
   <div class="app" id="app">
-    
     <div class="wrapper">
       <div class="window-title">
         <WindowTitle></WindowTitle>

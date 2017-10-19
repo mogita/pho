@@ -50,12 +50,4 @@ export default {
   overflow: hidden;
   z-index: 9999;
 }
-
-.craft-status {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100vh;
-  width: 100vw;
-}
 </style>
