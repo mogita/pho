@@ -85,7 +85,8 @@ function createWindow () {
     show: false
   })
 
-  statusComposer.loadURL(winURL + '#composer')
+  const composerUrl = winURL + '#/composer'
+  statusComposer.loadURL(composerUrl)
 
   statusComposer.on('close', event => {
     if (aboutToQuit) {

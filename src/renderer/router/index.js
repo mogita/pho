@@ -5,7 +5,6 @@ import App from './../App'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash',
   scrollBehavior: function (to, from, savedPosition) {
     return savedPosition || { x: 0, y: 0 }
   },
