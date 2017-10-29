@@ -1,12 +1,8 @@
 <template>
-  <div class="timeline-container" id="home-timeline-container" v-on:scroll="onScroll($el)" ref="homeTimelineContainer">
-    <div id="timeline">
-      <template v-for="(item, index) in homeTimeline" v-if="item.hasOwnProperty('user')">
-        <Card :item="item" :id="item.id" :key="'home-' + item.id" :belongsTo="'home'"></Card>
-      </template>
-      <div class="loading-more-bar" ref="loadingMoreBar">
-        •••
-      </div>
+  <div class="timeline-container" id="home-timeline-container" @scroll="onScroll($el)" ref="homeTimelineContainer" v-update>
+    <Card v-for="(item, index) in homeTimeline" v-if="item.hasOwnProperty('user')" :item="item" :id="item.id" :key="'home-' + item.id" :belongsTo="'home'"></Card>
+    <div class="loading-more-bar" ref="loadingMoreBar">
+      •••
     </div>
   </div>
 </template>
@@ -16,7 +12,7 @@ import Card from './Card'
 import { mapGetters } from 'vuex'
 import { ipcRenderer } from 'electron'
 
-let elTimeline
+let scrollTopHomeId
 
 export default {
   components: {
@@ -33,20 +29,28 @@ export default {
   },
   computed: {
     ...mapGetters('timelineHome', [
-      'showCraftStatus',
-      'homeTimeline',
-      'loginState'
+      'sinceId',
+      'homeTimeline'
     ])
   },
   watch: {
-    homeTimeline () {
-      this.limitScrolltop()
+    sinceId (value, oldValue) {
+      scrollTopHomeId = oldValue
+    }
+  },
+  directives: {
+    update (tl, binding, vnode) {
+      if (tl.scrollTop === 0 && vnode.children.length > 2 && scrollTopHomeId) {
+        setTimeout(() => {
+          const rect = document.getElementById('home-' + scrollTopHomeId).getBoundingClientRect()
+          tl.scrollTop = rect.top - 80
+        })
+      }
     }
   },
   methods: {
     async onScroll (el) {
       this.scrollbarHack()
-      this.limitScrolltop() // potential UI perf bottleneck
       this.$bus.$emit('timeline.scrolled.home')
       // scroll to bottom to load more
       if (this.$refs.loadingMoreBar.getBoundingClientRect().bottom <= el.clientHeight + 90) {
@@ -57,9 +61,13 @@ export default {
         }
       }
     },
-    limitScrolltop () {
+    offsetScrollTop () {
       const el = this.$refs.homeTimelineContainer
-      if (el && el.scrollTop <= 1) el.scrollTop = 1
+      if (el && el.scrollTop === 0) el.scrollTop = 1
+    },
+    restoreScrollTop () {
+      const el = this.$refs.homeTimelineContainer
+      el.scrollTop -= 1
     },
     scrollbarHack () {
       const scrollbarStyle = document.getElementById('scroll-bar-styles')
@@ -88,8 +96,6 @@ export default {
     })
 
     this.$nextTick(async () => {
-      elTimeline = this.$refs.homeTimelineContainer
-      elTimeline.scrollTop = 0
       await this.$pho.fetchHome()
       this.$pho.pollHome()
     })
@@ -101,6 +107,15 @@ export default {
     })
   },
   created () {
+    this.$bus.$off('tab.switch')
+    this.$bus.$on('tab.switch', tab => {
+      if (tab !== 'home') this.offsetScrollTop()
+      else {
+        this.$nextTick(() => {
+          this.restoreScrollTop()
+        })
+      }
+    })
     ipcRenderer.on('timeline.home.fetch', async (event, args) => {
       await this.$pho.fetchHome(args)
     })
@@ -112,7 +127,6 @@ export default {
 .timeline-container {
   height: calc(100vh - 80px);
   overflow-y: scroll;
-  transition: all 0.5s;
   overflow: overlay;
 }
 

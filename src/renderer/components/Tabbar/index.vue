@@ -9,7 +9,7 @@
 
       <div class="tab-pill">
         <div class="tab-label" :class="{active: activeTab === 'mention'}" @click="switchTab('mention')">
-          <i class="fa fa-at fa-fw"></i><span class="counter"></span>
+          <i class="fa fa-at fa-fw"></i><span class="counter" v-if="mentionTlUnreadCount"> {{mentionTlUnreadCount}}</span>
         </div>
       </div>
 
@@ -41,14 +41,14 @@ export default {
   props: [],
   components: {},
   computed: {
-    ...mapGetters('timelineHome', [
-      'unreadIds'
-    ]),
     ...mapGetters('tab', [
       'activeTab'
     ]),
     homeTlUnreadCount () {
-      return this.unreadIds.length || 0
+      return this.$store.getters['timelineHome/unreadIds'].length || 0
+    },
+    mentionTlUnreadCount () {
+      return this.$store.getters['timelineMention/unreadIds'].length || 0
     }
   },
   watch: {},
@@ -57,7 +57,10 @@ export default {
   },
   methods: {
     switchTab (tab) {
-      this.$store.dispatch('tab/setActiveTab', tab)
+      this.$bus.$emit('tab.switch', tab)
+      setTimeout(() => {
+        this.$store.dispatch('tab/setActiveTab', tab)
+      })
     }
   },
   mounted () {}

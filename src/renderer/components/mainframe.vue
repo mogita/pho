@@ -5,8 +5,8 @@
     </div>
 
     <div class="main" v-if="loginState === true">
-      <timelineHome v-show="activeTab === 'home'"></timelineHome>
-      <timelineMention v-show="activeTab === 'mention'"></timelineMention>
+      <timelineHome :class="{hidden: activeTab !== 'home'}"></timelineHome>
+      <timelineMention :class="{hidden: activeTab !== 'mention'}"></timelineMention>
     </div>
   </div>
 </template>
@@ -44,6 +44,12 @@ export default {
 
 .main {
   overflow: hidden;
+}
+
+.hidden {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
 }
 
 .login {

@@ -1,12 +1,12 @@
 <template>
-  <div class="container" v-on:mouseenter="setFocus(true)" v-on:mouseleave="setFocus(false)">
+  <div class="container" :id="`${belongsTo}-${id}`" v-on:mouseenter="setFocus(true)" v-on:mouseleave="setFocus(false)">
     <div class="avatar">
       <img :src="item.user.profile_image_url_large" alt="avatar">
     </div>
 
     <div class="content">
       <div class="headline">
-        <h6 class="nickname">{{ item.user.screen_name }} <small>@{{item.user.id}}</small></h6>
+        <h6 class="nickname">{{ item.user.screen_name }} <small>@{{item.user.id}} {{item.id}}</small></h6>
         <div class="created_at" v-show="!isFocus">{{ created_at }} <i class="fa fa-star fav" v-if="item.favorited === true"></i></div>
         <div class="controls" v-show="isFocus">
           <i class="fa fa-reply" @click="reply"></i>
@@ -41,7 +41,6 @@
 
 <script>
 import { remote, ipcRenderer } from 'electron'
-import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
@@ -81,22 +80,11 @@ export default {
       clientBottom: null
     }
   },
-
-  computed: {
-    ...mapGetters('timelineHome', [
-      'unreadIds'
-    ])
-  },
-
+  computed: {},
   methods: {
-    ...mapActions('timelineHome', [
-      'markRead'
-    ]),
-
     getUnescapedText () {
       return '<span class="inner-message">' + this.item.text.replace(/\n/g, '<br>').replace(/([\uD83C-\uDBFF\uDC00-\uDFFF]+)/g, '<span style="letter-spacing: 4px;">$1</span>') + '</span>'
     },
-
     popupImage (url) {
       this.loadingImage = true
       this.getImageSize(url)
@@ -131,7 +119,6 @@ export default {
           console.error(err)
         })
     },
-
     getImageSize (url) {
       return new Promise((resolve, reject) => {
         let img = new Image()
@@ -141,7 +128,6 @@ export default {
         img.src = url
       })
     },
-
     reply () {
       ipcRenderer.send('show-status-composer', {
         draft: `@${this.item.user.screen_name} `,
@@ -151,7 +137,6 @@ export default {
         cursorPos: 140
       })
     },
-
     repost () {
       ipcRenderer.send('show-status-composer', {
         draft: `转@${this.item.user.screen_name} ${this.stripHTML(this.item.text)}`,
@@ -159,25 +144,22 @@ export default {
         refStatusId: this.item.id
       })
     },
-
     toggleFav () {
       this.$pho.toggleFav(this.item.favorited, this.item.id)
     },
-
     stripHTML (html) {
       let tmp = document.createElement('div')
       tmp.innerHTML = html
       return tmp.textContent || tmp.innerText || ''
     },
-
     setFocus (value) {
       this.isFocus = value
     },
-
     scrollHandler () {
       // as this card enters the viewport (below top bar over 80px) mark this card "read"
       if (this.$el.getBoundingClientRect().top - 80 >= -1) {
-        this.markRead(this.id)
+        if (this.belongsTo === 'home') this.$store.dispatch('timelineHome/markRead', this.id)
+        else if (this.belongsTo === 'mention') this.$store.dispatch('timelineMention/markRead', this.id)
         this.$bus.$off(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
       }
     }
@@ -185,7 +167,10 @@ export default {
   mounted () {
     this.$nextTick(_ => {
       // add event listener if this card is still "unread"
-      if (~this.unreadIds.indexOf(this.id)) {
+      let getterName
+      if (this.belongsTo === 'home') getterName = 'timelineHome/unreadIds'
+      else if (this.belongsTo === 'mention') getterName = 'timelineMention/unreadIds'
+      if (~this.$store.getters[getterName].indexOf(this.id)) {
         // turn off event listener for scroll to mark read
         this.$bus.$off(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
         this.$bus.$on(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)

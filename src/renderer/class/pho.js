@@ -90,7 +90,7 @@ class Pho {
     clearInterval(this.homePoller)
     this.homePoller = setInterval(() => {
       this.fetchHome({append: true})
-    }, this.homePollerInterval || 15 * 1000)
+    }, this.homePollerInterval || 20 * 1000)
   }
 
   async fetchMention (args = {more: false, append: false}) {
@@ -115,7 +115,7 @@ class Pho {
     clearInterval(this.mentionPoller)
     this.mentionPoller = setInterval(() => {
       this.fetchMention({append: true})
-    }, this.mentionPollerInterval || 15 * 1000)
+    }, this.mentionPollerInterval || 20 * 1000)
   }
 
   async toggleFav (currentFavState, msgId) {
