@@ -64,7 +64,8 @@ class Pho {
 
   logout () {
     ipcRenderer.send('user.logout')
-    store.dispatch('timelineHome/resetHomeTimeline')
+    store.dispatch('timelineHome/reset')
+    store.dispatch('timelineMention/reset')
     store.dispatch('user/unsetAuthData')
   }
 

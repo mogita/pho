@@ -44,7 +44,7 @@ const mutations = {
     const index = _.findIndex(state.timeline, {id: msgId})
     if (index) state.timeline.splice(index, 1)
   },
-  resetTimelineMention (state, value) {
+  reset (state, value) {
     state.timeline = []
     state.sinceId = ''
     state.maxId = ''
@@ -55,8 +55,8 @@ const actions = {
   appendToTimelineMention (ctx, value) {
     ctx.commit('appendToTimelineMention', value)
   },
-  resetTimelineMention (ctx, value) {
-    ctx.commit('resetTimelineMention', value)
+  reset (ctx, value) {
+    ctx.commit('reset', value)
   },
   markRead (ctx, value) {
     ctx.commit('markRead', value)
