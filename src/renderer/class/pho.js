@@ -134,6 +134,20 @@ class Pho {
     }
   }
 
+  async deleteStatus (msgId) {
+    if (!msgId) return false
+    try {
+      await this.api.statusesDestroy(msgId)
+      store.dispatch('timelineHome/deleteItem', msgId)
+      store.dispatch('timelineMention/deleteItem', msgId)
+      this.toast('success', '消息已删除')
+      return true
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
   async sendNewStatus (args) {
     if (!this.isAuthed) return false
     try {

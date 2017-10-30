@@ -39,6 +39,11 @@ const mutations = {
     const item = _.find(state.timeline, {id: msgId})
     item.favorited = !item.favorited
   },
+  deleteItem (state, msgId) {
+    if (!msgId) return false
+    const index = _.findIndex(state.timeline, {id: msgId})
+    if (index) state.timeline.splice(index, 1)
+  },
   resetHomeTimeline (state, value) {
     state.timeline = []
     state.sinceId = ''
@@ -58,6 +63,9 @@ const actions = {
   },
   alterFav (ctx, value) {
     ctx.commit('alterFav', value)
+  },
+  deleteItem (ctx, value) {
+    ctx.commit('deleteItem', value)
   }
 }
 

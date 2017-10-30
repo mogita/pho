@@ -12,6 +12,7 @@
           <i class="fa fa-reply" @click="reply"></i>
           <i class="fa fa-retweet" @click="repost"></i>
           <i class="fa fa-star" :class="(item.favorited === true) ? 'fav' : ''" @click="toggleFav"></i>
+          <i class="fa fa-trash" v-if="item.is_self" @click="deleteStatus"></i>
         </div>
       </div>
 
@@ -146,6 +147,11 @@ export default {
     },
     toggleFav () {
       this.$pho.toggleFav(this.item.favorited, this.item.id)
+    },
+    deleteStatus () {
+      if (confirm('确实要删除这条消息吗？')) {
+        this.$pho.deleteStatus(this.item.id)
+      }
     },
     stripHTML (html) {
       let tmp = document.createElement('div')
