@@ -1,5 +1,5 @@
 <template>
-  <div class="container" :id="`${belongsTo}-${id}`" v-on:mouseenter="setFocus(true)" v-on:mouseleave="setFocus(false)">
+  <div class="container" :class="{'height-zero': heightZero === true}" :id="`${belongsTo}-${id}`" v-on:mouseenter="setFocus(true)" v-on:mouseleave="setFocus(false)">
     <div class="avatar">
       <img :src="item.user.profile_image_url_large" alt="avatar">
     </div>
@@ -78,7 +78,9 @@ export default {
       created_at: moment(Date.parse(this.item.created_at)).fromNow(),
       loadingImage: false,
       isFocus: false,
-      clientBottom: null
+      clientBottom: null,
+      deleted: false,
+      heightZero: false
     }
   },
   computed: {},
@@ -150,7 +152,13 @@ export default {
     },
     deleteStatus () {
       if (confirm('确实要删除这条消息吗？')) {
-        this.$pho.deleteStatus(this.item.id)
+        if (this.$pho.deleteStatus(this.item.id)) {
+          this.heightZero = true
+          setTimeout(() => {
+            this.$store.dispatch('timelineHome/deleteItem', this.item.id)
+            this.$store.dispatch('timelineMention/deleteItem', this.item.id)
+          }, 401)
+        }
       }
     },
     stripHTML (html) {
@@ -197,6 +205,12 @@ export default {
   border-bottom: 1px solid #f0f0f0;
   cursor: default;
   user-select: none;
+  transition: all .4s ease-in;
+}
+
+.height-zero {
+  transform: scaleY(0.1) skewX(25deg);
+  opacity: 0;
 }
 
 .container:hover {
