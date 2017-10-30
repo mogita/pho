@@ -1,5 +1,5 @@
 <template>
-  <div class="timeline-container" id="home-timeline-container" @scroll="onScroll($el)" ref="homeTimelineContainer" v-update>
+  <div class="timeline-container" id="home-timeline-container" @scroll="onScroll" ref="homeTimelineContainer" v-update>
     <Card v-for="(item, index) in homeTimeline" v-if="item.hasOwnProperty('user')" :item="item" :id="item.id" :key="'home-' + item.id" :belongsTo="'home'"></Card>
     <div class="loading-more-bar" ref="loadingMoreBar">
       •••
@@ -40,16 +40,12 @@ export default {
   },
   directives: {
     update (tl, binding, vnode) {
-      if (tl.scrollTop === 0 && vnode.children.length > 2 && scrollTopHomeId) {
-        setTimeout(() => {
-          const rect = document.getElementById('home-' + scrollTopHomeId).getBoundingClientRect()
-          tl.scrollTop = rect.top - 80
-        })
-      }
+      if (tl.scrollTop === 0 && scrollTopHomeId) tl.scrollTop = 1
     }
   },
   methods: {
-    async onScroll (el) {
+    async onScroll (event) {
+      const el = event.target
       this.scrollbarHack()
       this.$bus.$emit('timeline.scrolled.home')
       // scroll to bottom to load more

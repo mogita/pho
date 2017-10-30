@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import VirtualList from 'vue-virtual-scroll-list'
 import Card from './Card'
 import { mapGetters } from 'vuex'
 import { ipcRenderer } from 'electron'
@@ -17,7 +16,6 @@ let scrollTopMentionId
 
 export default {
   components: {
-    VirtualList,
     Card
   },
   name: 'timelineMention',
@@ -41,16 +39,12 @@ export default {
   },
   directives: {
     update (tl, binding, vnode) {
-      if (tl.scrollTop === 0 && vnode.children.length > 2 && scrollTopMentionId) {
-        setTimeout(() => {
-          const rect = document.getElementById('mention-' + scrollTopMentionId).getBoundingClientRect()
-          tl.scrollTop = rect.top - 81
-        })
-      }
+      if (tl.scrollTop === 0 && scrollTopMentionId) tl.scrollTop = 1
     }
   },
   methods: {
-    async onScroll (el) {
+    async onScroll (event) {
+      const el = event.target
       this.scrollbarHack()
       this.$bus.$emit('timeline.scrolled.mention')
       // scroll to bottom to load more
