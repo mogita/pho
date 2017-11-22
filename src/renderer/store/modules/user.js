@@ -42,7 +42,7 @@ const actions = {
     commit('setAuthData', {})
     commit('setUserhData', {})
     commit('setLoginState', false)
-    this.dispatch('timelineHome/resetHomeTimeline')
+    this.dispatch('timelineHome/reset')
   },
 
   fetchUserData ({commit}, res) {
