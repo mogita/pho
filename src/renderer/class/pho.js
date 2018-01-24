@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, shell } from 'electron'
 import store from './../store'
 import API from './../api'
 import {PhoRuntimeError, PhoNetworkError, PhoAuthError} from './error'
@@ -119,6 +119,28 @@ class Pho {
     }, this.mentionPollerInterval || 20 * 1000)
   }
 
+  async fetchSearch (args = {more: false}) {
+    if (!this.isAuthed) return false
+    try {
+      const data = await this.api.searchPublicTimeline(args.keyword)
+      return data
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  async fetchUserStatuses (args = {more: false}) {
+    if (!this.isAuthed) return false
+    try {
+      const data = await this.api.statusesUserTimeline(args.id)
+      return data
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
   async toggleFav (currentFavState, msgId) {
     if (!this.isAuthed) return false
     try {
@@ -173,6 +195,32 @@ class Pho {
       this.handleError(err)
       return false
     }
+  }
+
+  async getUserProfile (id) {
+    if (!id) return false
+    try {
+      const profile = await this.api.usersShow(id)
+      return profile
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  async getUserTimeline (id, count = 20) {
+    if (!id) return false
+    try {
+      const res = await this.api.statusesUserTimeline(id, null, null, count)
+      return res
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  openExternalLink (url) {
+    shell.openExternal(url, {activate: false})
   }
 
   handleError (error) {

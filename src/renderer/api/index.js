@@ -147,8 +147,8 @@ class API {
    * @returns
    * @memberof API
    */
-  searchPublicTimeline (q = null, sinceId = null, maxId = null, count = 20) {
-    return this.get('/search/public_timeline', this.purgeParam({q, since_id: sinceId, max_id: maxId, count}))
+  searchPublicTimeline (q = null, sinceId = null, maxId = null, count = 20, format = 'html') {
+    return this.get('/search/public_timeline', this.purgeParam({q, since_id: sinceId, max_id: maxId, count, format}))
   }
 
   /**
@@ -770,8 +770,8 @@ class API {
    * @returns
    * @memberof API
    */
-  statusesUserTimeline (id = null, sinceId = null, maxId = null, count = 20, page = 1) {
-    return this.get('/statuses/user_timeline', this.purgeParam({id, since_id: sinceId, max_id: maxId, count, page}))
+  statusesUserTimeline (id = null, sinceId = null, maxId = null, count = 20, page = 1, format = 'html') {
+    return this.get('/statuses/user_timeline', this.purgeParam({id, since_id: sinceId, max_id: maxId, count, page, format}))
   }
 
   /**

@@ -5,24 +5,23 @@
     </div>
 
     <div class="main" v-if="loginState === true">
-      <timelineHome :class="{hidden: activeTab !== 'home'}"></timelineHome>
-      <timelineMention :class="{hidden: activeTab !== 'mention'}"></timelineMention>
+      <timelineHomeContainer :class="{hidden: activeTab !== 'home'}"></timelineHomeContainer>
+      <timelineMentionContainer :class="{hidden: activeTab !== 'mention'}"></timelineMentionContainer>
     </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-
 import LoginView from './../components/Login/index'
-import timelineHome from './../components/Timeline/home'
-import timelineMention from './../components/Timeline/mention'
+import timelineHomeContainer from './Container/home'
+import timelineMentionContainer from './Container/mention'
 
 export default {
   components: {
     LoginView,
-    timelineHome,
-    timelineMention
+    timelineHomeContainer,
+    timelineMentionContainer
   },
 
   computed: {

@@ -1,6 +1,6 @@
 <template>
   <div class="timeline-container" id="mention-timeline-container" @scroll="onScroll" ref="mentionTimelineContainer" v-update>
-    <Card v-for="(item, index) in timelineMention" v-if="item.hasOwnProperty('user')" :item="item" :id="item.id" :key="'mention-' + item.id" :belongsTo="'mention'"></Card>
+    <Card v-for="item in timelineMention" v-if="item.hasOwnProperty('user')" :item="item" :id="item.id" :key="'mention-' + item.id" :belongsTo="'mention'"></Card>
     <div class="loading-more-bar" ref="loadingMoreBar">
       •••
     </div>

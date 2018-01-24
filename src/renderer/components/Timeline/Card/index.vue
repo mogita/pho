@@ -1,12 +1,12 @@
 <template>
   <div class="container" :class="{'height-zero': heightZero === true}" :id="`${belongsTo}-${id}`" v-on:mouseenter="setFocus(true)" v-on:mouseleave="setFocus(false)">
     <div class="avatar">
-      <img :src="item.user.profile_image_url_large" alt="avatar">
+      <img :src="item.user.profile_image_url_large" alt="avatar" @click="handleProfileClick(item.user.id, item.user.name)">
     </div>
 
     <div class="content">
       <div class="headline">
-        <h6 class="nickname">{{ item.user.screen_name }} <small>@{{item.user.id}} {{item.id}}</small></h6>
+        <h6 class="nickname" @click="handleProfileClick(item.user.id, item.user.name)">{{ item.user.screen_name }} <small>@{{item.user.id}} {{item.id}}</small></h6>
         <div class="created_at" v-show="!isFocus">{{ created_at }} <i class="fa fa-star fav" v-if="item.favorited === true"></i></div>
         <div class="controls" v-show="isFocus">
           <i class="fa fa-reply" @click="reply"></i>
@@ -16,7 +16,26 @@
         </div>
       </div>
 
-      <div class="message" v-html="getUnescapedText()"></div>
+      <div class="message">
+        <template v-for="(chunk, index) in getNormalizedHtml()">
+          <template v-if="chunk.type === 'text'">
+            <span :key="index" v-html="chunk.text"></span>
+          </template>
+          <template v-else-if="chunk.type === 'at'">
+            <span class="at" :key="index" @click="handleProfileClick(chunk.id, chunk.name)" v-html="chunk.text"></span>
+          </template>
+          <template v-else-if="chunk.type === 'link'">
+            <span class="link" :key="index" @click="handleLinkClick(chunk.link)" v-html="chunk.text"></span>
+          </template>
+          <template v-else-if="chunk.type === 'tag'">
+            <span class="tag" :key="index" @click="handleTagClick(chunk.query)" v-html="chunk.text"></span>
+          </template>
+          <template v-else>
+            <span :key="index" v-html="chunk.text"></span>
+          </template>
+        </template>
+      </div>
+
       <div class="image-preview" v-if="typeof item.photo === 'object'">
         <div class="image-mask" v-if="loadingImage"><i class="fa fa-circle-o-notch fa-spin"></i></div>
         <img :src="item.photo.largeurl" alt="preview" @click="popupImage(item.photo.originurl)">
@@ -24,16 +43,16 @@
       <div class="meta">
         <span class="via">
           发自
-          <a class="source" v-if="typeof item.source_url == 'string' && item.source_url.length > 0" :href="item.source_url " target="_blank">
+          <a class="source" v-if="typeof item.source_url === 'string' && item.source_url.length > 0" @click="handleLinkClick(item.source_url)">
             {{ item.source_name }}
           </a>
           <span class="source" v-else>{{ item.source_name }}</span>
         </span>
-        <span v-if="item.type == 'repost'">
-          转自 <span v-if="item.type == 'repost'">{{ item.repost_screen_name }}</span>
+        <span v-if="item.type === 'repost'">
+          转自 <span v-if="item.type === 'repost'">{{ item.repost_screen_name }}</span>
         </span>
-        <span v-if="item.type == 'reply'">
-          回复给 <i v-if="item.type == 'reply'">{{ item.in_reply_to_screen_name }}</i>
+        <span v-if="item.type === 'reply'">
+          回复给 <i v-if="item.type === 'reply'">{{ item.in_reply_to_screen_name }}</i>
         </span>
       </div>
     </div>
@@ -85,8 +104,38 @@ export default {
   },
   computed: {},
   methods: {
-    getUnescapedText () {
-      return '<span class="inner-message">' + this.item.text.replace(/\n/g, '<br>').replace(/([\uD83C-\uDBFF\uDC00-\uDFFF]+)/g, '<span style="letter-spacing: 4px;">$1</span>') + '</span>'
+    handleProfileClick (id, nickname) {
+      this.$bus.$emit(`timeline.${this.belongsTo}.view.beforePush`)
+      this.$nextTick(() => {
+        this.$bus.$emit(`timeline.${this.belongsTo}.view.push`, {
+          component: 'profile',
+          title: nickname,
+          args: {id},
+          nonce: Math.random().toString().replace('.', ''),
+          belongsTo: this.belongsTo
+        })
+      })
+    },
+    handleLinkClick (url) {
+      this.$pho.openExternalLink(url)
+    },
+    handleTagClick (keyword) {
+      this.$bus.$emit(`timeline.${this.belongsTo}.view.push`, {
+        component: 'timelineGeneric',
+        title: keyword,
+        args: {
+          keyword,
+          type: 'tag'
+        },
+        nonce: Math.random().toString().replace('.', ''),
+        belongsTo: this.belongsTo
+      })
+    },
+    getNormalizedHtml () {
+      return this.item.txt
+        .map(chunk => {
+          return {...chunk, text: chunk.text.replace(/\n/g, '<br>').replace(/([\uD83C-\uDBFF\uDC00-\uDFFF]+)/g, '<span style="letter-spacing: 4px;">$1</span>')}
+        })
     },
     popupImage (url) {
       this.loadingImage = true
@@ -184,7 +233,7 @@ export default {
       let getterName
       if (this.belongsTo === 'home') getterName = 'timelineHome/unreadIds'
       else if (this.belongsTo === 'mention') getterName = 'timelineMention/unreadIds'
-      if (~this.$store.getters[getterName].indexOf(this.id)) {
+      if (!~['profile', 'generic'].indexOf(this.belongsTo) && ~this.$store.getters[getterName].indexOf(this.id)) {
         // turn off event listener for scroll to mark read
         this.$bus.$off(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
         this.$bus.$on(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
@@ -313,6 +362,14 @@ i.fav {
   line-height: 22px;
   word-wrap: break-word;
   word-break: break-all;
+
+  .at, .link, .tag {
+    color: #00bbea;
+  }
+
+  .at:active, .link:active, .tag:active {
+    color: #44ddff;
+  }
 }
 
 .image-preview {

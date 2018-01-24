@@ -1,6 +1,6 @@
 <template>
   <div class="timeline-container" id="home-timeline-container" @scroll="onScroll" ref="homeTimelineContainer" v-update>
-    <Card v-for="(item, index) in homeTimeline" v-if="item.hasOwnProperty('user')" :item="item" :id="item.id" :key="'home-' + item.id" :belongsTo="'home'"></Card>
+    <Card v-for="item in homeTimeline" v-if="item.hasOwnProperty('user')" :item="item" :id="item.id" :key="'home-' + item.id" :belongsTo="'home'"></Card>
     <div class="loading-more-bar" ref="loadingMoreBar">
       •••
     </div>
@@ -112,6 +112,12 @@ export default {
         })
       }
     })
+
+    this.$bus.$off('timeline.home.view.beforePush')
+    this.$bus.$on('timeline.home.view.beforePush', () => {
+      this.offsetScrollTop()
+    })
+
     ipcRenderer.on('timeline.home.fetch', async (event, args) => {
       await this.$pho.fetchHome(args)
     })
@@ -121,7 +127,7 @@ export default {
 
 <style lang="scss" scoped>
 .timeline-container {
-  height: calc(100vh - 80px);
+  height: calc(100vh - 110px);
   overflow-y: scroll;
   overflow: overlay;
 }

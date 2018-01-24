@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
+import VueKeepScrollPosition from 'vue-keep-scroll-position'
 
 import App from './App'
 import router from './router'
@@ -16,6 +17,7 @@ Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(Toast)
+Vue.use(VueKeepScrollPosition)
 
 // hook toast to an global event
 window.addEventListener('toast', event => {

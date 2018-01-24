@@ -44,22 +44,3 @@ button:focus {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
-
-.inner-message {
-  a {
-    color: #00ccff;
-    text-decoration: none;
-    padding: 0 2px 0 1px;
-    border-radius: 2px;
-  }
-
-  a:hover {
-    color: #ffffff;
-    background-color: #00bbea;
-  }
-
-  a:active {
-    color: #ffffff;
-    background-color: #00afdb;
-  }
-}

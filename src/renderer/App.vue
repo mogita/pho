@@ -46,6 +46,7 @@ export default {
   flex-flow: column;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 .window-title {
