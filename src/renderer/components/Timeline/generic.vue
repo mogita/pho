@@ -58,6 +58,11 @@ export default {
           id: this.args.id,
           key: this.nonce
         })
+      } else if (this.args.type === 'search') {
+        this.timeline = await this.$pho.fetchSearch({
+          keyword: this.args.keyword,
+          key: this.nonce
+        })
       }
     })
   }

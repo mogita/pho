@@ -233,7 +233,7 @@ export default {
       let getterName
       if (this.belongsTo === 'home') getterName = 'timelineHome/unreadIds'
       else if (this.belongsTo === 'mention') getterName = 'timelineMention/unreadIds'
-      if (!~['me', 'profile', 'generic'].indexOf(this.belongsTo) && ~this.$store.getters[getterName].indexOf(this.id)) {
+      if (!~['me', 'search', 'profile', 'generic'].indexOf(this.belongsTo) && ~this.$store.getters[getterName].indexOf(this.id)) {
         // turn off event listener for scroll to mark read
         this.$bus.$off(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)
         this.$bus.$on(`timeline.scrolled.${this.belongsTo}`, this.scrollHandler)

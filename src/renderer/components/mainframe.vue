@@ -8,6 +8,7 @@
       <timelineHomeContainer :class="{hidden: activeTab !== 'home'}"></timelineHomeContainer>
       <timelineMentionContainer :class="{hidden: activeTab !== 'mention'}"></timelineMentionContainer>
       <meContainer :class="{hidden: activeTab !== 'me'}"></meContainer>
+      <searchContainer :class="{hidden: activeTab !== 'search'}"></searchContainer>
     </div>
   </div>
 </template>
@@ -18,13 +19,15 @@ import LoginView from './../components/Login/index'
 import timelineHomeContainer from './Container/home'
 import timelineMentionContainer from './Container/mention'
 import meContainer from './Container/me'
+import searchContainer from './Container/search'
 
 export default {
   components: {
     LoginView,
     timelineHomeContainer,
     timelineMentionContainer,
-    meContainer
+    meContainer,
+    searchContainer
   },
 
   computed: {
