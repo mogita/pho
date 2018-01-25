@@ -7,6 +7,7 @@
     <div class="main" v-if="loginState === true">
       <timelineHomeContainer :class="{hidden: activeTab !== 'home'}"></timelineHomeContainer>
       <timelineMentionContainer :class="{hidden: activeTab !== 'mention'}"></timelineMentionContainer>
+      <meContainer :class="{hidden: activeTab !== 'me'}"></meContainer>
     </div>
   </div>
 </template>
@@ -16,12 +17,14 @@ import { mapGetters } from 'vuex'
 import LoginView from './../components/Login/index'
 import timelineHomeContainer from './Container/home'
 import timelineMentionContainer from './Container/mention'
+import meContainer from './Container/me'
 
 export default {
   components: {
     LoginView,
     timelineHomeContainer,
-    timelineMentionContainer
+    timelineMentionContainer,
+    meContainer
   },
 
   computed: {

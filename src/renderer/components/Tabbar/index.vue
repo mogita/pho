@@ -26,7 +26,7 @@
       </div>
 
       <div class="tab-pill">
-        <div class="tab-label" :class="{active: activeTab === 'profile'}" @click="switchTab('profile')">
+        <div class="tab-label" :class="{active: activeTab === 'me'}" @click="switchTab('me')">
           <i class="fa fa-user-o fa-fw"></i>
         </div>
       </div>
