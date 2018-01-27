@@ -219,6 +219,37 @@ class Pho {
     }
   }
 
+  async getTrendsList () {
+    try {
+      const res = await this.api.trendsList()
+      return res
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  async getSavedSearchesList () {
+    try {
+      const res = await this.api.savedSearchesList()
+      return res
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
+  async deleteSavedSearch (id) {
+    if (!id) return false
+    try {
+      await this.api.savedSearchesDestroy(id)
+      return true
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
   openExternalLink (url) {
     shell.openExternal(url, {activate: false})
   }
