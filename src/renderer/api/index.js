@@ -107,10 +107,10 @@ class API {
    * @returns
    * @memberof API
    */
-  upload (photo = '', status = '', location = '') {
+  up (url = '', param = {}) {
     return new Promise((resolve, reject) => {
-      if (!this.client) return reject(new Error('fanfou client instance not ready, could not exec <upload>'))
-      this.client.upload(fs.createReadStream(photo), status, (err, res, data) => {
+      if (!this.client) return reject(new Error('fanfou client instance not ready, could not exec <up> to ' + url))
+      this.client.up(url, param, (err, res, data) => {
         if (err) return reject(this.normalizeError(err))
         else return resolve(res)
       })
@@ -485,7 +485,18 @@ class API {
    * @memberof API
    */
   photosUpload (photo = null, status = null, location = null) {
-    return this.upload(photo, status, location)
+    return this.up('/photos/upload', {photo: fs.createReadStream(photo), status, location})
+  }
+
+  /**
+   * 上传头像
+   *
+   * @param {string} [photo=null]
+   * @returns
+   * @memberof API
+   */
+  avatarUpload (photo = null) {
+    return this.up('/account/update_profile_image', {image: fs.createReadStream(photo)})
   }
 
   /****************************************
