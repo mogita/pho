@@ -197,6 +197,17 @@ class Pho {
     }
   }
 
+  async updateAvatar (imageFilePath) {
+    if (!imageFilePath) return false
+    try {
+      await this.api.avatarUpload(imageFilePath)
+      return true
+    } catch (err) {
+      this.handleError(err)
+      return false
+    }
+  }
+
   async getUserProfile (id) {
     if (!id) return false
     try {
